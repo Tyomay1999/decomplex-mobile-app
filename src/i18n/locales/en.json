@@ -1,0 +1,35 @@
+{
+  "common": {
+    "appName": "Decomplex",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "auth": {
+    "title": "Authentication",
+    "login": "Login",
+    "logout": "Logout",
+    "current": "Current session",
+    "isLoggedIn": "Is logged in",
+    "userId": "User ID",
+    "email": "Email",
+    "language": "Language",
+    "fingerprint": "Fingerprint",
+    "accessToken": "Access token",
+    "refreshToken": "Refresh token"
+  },
+  "debug": {
+    "screenTitle": "Debug Panel",
+    "bootstrapped": "Bootstrapped",
+    "yes": "YES",
+    "no": "NO"
+  },
+  "errors": {
+    "missingRefreshToken": "Refresh token is missing.",
+    "loginFailed": "Login failed.",
+    "logoutFailed": "Logout failed.",
+    "currentFailed": "Failed to load current session."
+  }
+}

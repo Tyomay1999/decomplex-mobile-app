@@ -1,0 +1,35 @@
+{
+  "common": {
+    "appName": "Decomplex",
+    "loading": "Բեռնում...",
+    "error": "Սխալ",
+    "success": "Հաջողությամբ",
+    "cancel": "Չեղարկել",
+    "save": "Պահպանել"
+  },
+  "auth": {
+    "title": "Ավտորիզացում",
+    "login": "Մուտք",
+    "logout": "Ելք",
+    "current": "Ընթացիկ սեսիա",
+    "isLoggedIn": "Մուտք գործած է",
+    "userId": "Օգտվողի ID",
+    "email": "Email",
+    "language": "Լեզու",
+    "fingerprint": "Fingerprint",
+    "accessToken": "Access token",
+    "refreshToken": "Refresh token"
+  },
+  "debug": {
+    "screenTitle": "Թեստավորման վահանակ",
+    "bootstrapped": "Սկզբնավորված է",
+    "yes": "ԱՅՈ",
+    "no": "ՈՉ"
+  },
+  "errors": {
+    "missingRefreshToken": "Refresh token-ը բացակայում է։",
+    "loginFailed": "Մուտքը ձախողվեց։",
+    "logoutFailed": "Ելքը ձախողվեց։",
+    "currentFailed": "Չհաջողվեց ստանալ ընթացիկ սեսիան։"
+  }
+}
