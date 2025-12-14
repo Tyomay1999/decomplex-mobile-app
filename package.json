@@ -9,15 +9,24 @@
     "web": "expo start --web",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write .",
-    "format:all": "npm run format && npm run lint"
+    "typecheck": "tsc --noEmit",
+    "format:all": "npm run format && npm run lint && npm run typecheck"
   },
   "dependencies": {
-    "expo": "~54.0.27",
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "@reduxjs/toolkit": "^2.11.1",
+    "async-mutex": "^0.5.0",
+    "expo": "~54.0.29",
+    "expo-localization": "~17.0.8",
+    "expo-secure-store": "~15.0.8",
     "expo-status-bar": "~3.0.9",
+    "i18next": "^25.7.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-i18next": "^16.5.0",
     "react-native": "0.81.5",
-    "react-native-web": "^0.21.0"
+    "react-native-web": "^0.21.0",
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
