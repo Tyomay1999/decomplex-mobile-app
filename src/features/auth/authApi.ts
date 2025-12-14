@@ -1,5 +1,12 @@
 import { api } from "../../api/api";
-import type { LoginDataDto, LoginRequestDto, LogoutRequestDto, UserDto } from "./authTypes";
+import type {
+  LoginDataDto,
+  LoginRequestDto,
+  LogoutRequestDto,
+  RefreshDataDto,
+  RefreshRequestDto,
+  UserDto,
+} from "./authTypes";
 export type ApiResponse<T> = {
   success: boolean;
   data: T;
@@ -37,6 +44,15 @@ export const authApi = api.injectEndpoints({
       }),
       providesTags: ["Auth"],
       transformResponse: (response: ApiResponse<{ user: UserDto }>) => response.data.user,
+    }),
+
+    refresh: builder.mutation<RefreshDataDto, RefreshRequestDto>({
+      query: (body) => ({
+        url: "/auth/refresh",
+        method: "POST",
+        body,
+      }),
+      transformResponse: (response: ApiResponse<RefreshDataDto>) => response.data,
     }),
   }),
 });

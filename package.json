@@ -15,6 +15,7 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@reduxjs/toolkit": "^2.11.1",
+    "async-mutex": "^0.5.0",
     "expo": "~54.0.29",
     "expo-localization": "~17.0.8",
     "expo-secure-store": "~15.0.8",
