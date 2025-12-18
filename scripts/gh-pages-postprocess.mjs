@@ -7,9 +7,9 @@ const indexHtmlPath = path.join(distDir, "index.html");
 const BASE_PATH = process.env.BASE_PATH || "/";
 
 const normalizeBasePath = (p) => {
-    if (!p.startsWith("/")) p = `/${p}`;
-    if (!p.endsWith("/")) p = `${p}/`;
-    return p;
+  if (!p.startsWith("/")) p = `/${p}`;
+  if (!p.endsWith("/")) p = `${p}/`;
+  return p;
 };
 
 const basePath = normalizeBasePath(BASE_PATH);
@@ -64,7 +64,11 @@ fs.writeFileSync(path.join(distDir, "404.html"), notFoundHtml, "utf8");
 
 const indexHtml = fs.readFileSync(indexHtmlPath, "utf8");
 if (!indexHtml.includes("URLSearchParams(window.location.search)")) {
-    fs.writeFileSync(indexHtmlPath, indexHtml.replace("</head>", `${resolverSnippet}\n</head>`), "utf8");
+  fs.writeFileSync(
+    indexHtmlPath,
+    indexHtml.replace("</head>", `${resolverSnippet}\n</head>`),
+    "utf8",
+  );
 }
 
 console.log(`[gh-pages] OK: basePath=${basePath} | dist patched`);

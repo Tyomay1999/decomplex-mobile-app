@@ -7,6 +7,7 @@ import type {
   RefreshRequestDto,
   UserDto,
 } from "./authTypes";
+
 export type ApiResponse<T> = {
   success: boolean;
   data: T;
