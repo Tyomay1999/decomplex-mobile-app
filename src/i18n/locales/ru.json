@@ -8,17 +8,38 @@
     "save": "Сохранить"
   },
   "auth": {
-    "title": "Аутентификация",
-    "login": "Войти",
-    "logout": "Выйти",
-    "current": "Текущая сессия",
-    "isLoggedIn": "Авторизован",
-    "userId": "ID пользователя",
-    "email": "Email",
-    "language": "Язык",
-    "fingerprint": "Fingerprint",
-    "accessToken": "Access token",
-    "refreshToken": "Refresh token"
+    "login": {
+      "title": "Вход",
+      "headline": "С возвращением",
+      "subtitle": "Войдите, чтобы продолжить",
+      "email": "Электронная почта",
+      "password": "Пароль",
+      "submit": "Войти",
+      "loading": "Загрузка...",
+      "noAccount": "Нет аккаунта?",
+      "signup": "Регистрация"
+    },
+    "register": {
+      "title": "Регистрация",
+      "headline": "Создать аккаунт",
+      "subtitle": "Начните прямо сейчас",
+      "accountType": "Тип аккаунта",
+      "candidate": "Кандидат",
+      "company": "Компания",
+      "firstName": "Имя",
+      "lastName": "Фамилия",
+      "companyName": "Название компании",
+      "email": "Электронная почта",
+      "password": "Пароль",
+      "submit": "Создать аккаунт",
+      "haveAccount": "Уже есть аккаунт?",
+      "login": "Войти",
+      "notConnected": "Эндпоинт регистрации ещё не подключён. Следующий шаг: связать с backend."
+    },
+    "language": {
+      "label": "Язык",
+      "cancel": "Отмена"
+    }
   },
   "debug": {
     "screenTitle": "Панель отладки",
@@ -31,5 +52,11 @@
     "loginFailed": "Ошибка входа.",
     "logoutFailed": "Ошибка выхода.",
     "currentFailed": "Не удалось получить текущую сессию."
+  },
+  "home": {
+    "title": "Главная",
+    "subtitle": "Это главная страница.",
+    "logout": "Выйти",
+    "guest": "Гостевой режим: пожалуйста, войдите."
   }
 }

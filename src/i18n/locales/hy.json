@@ -8,17 +8,38 @@
     "save": "Պահպանել"
   },
   "auth": {
-    "title": "Ավտորիզացում",
-    "login": "Մուտք",
-    "logout": "Ելք",
-    "current": "Ընթացիկ սեսիա",
-    "isLoggedIn": "Մուտք գործած է",
-    "userId": "Օգտվողի ID",
-    "email": "Email",
-    "language": "Լեզու",
-    "fingerprint": "Fingerprint",
-    "accessToken": "Access token",
-    "refreshToken": "Refresh token"
+    "login": {
+      "title": "Մուտք",
+      "headline": "Բարի վերադարձ",
+      "subtitle": "Մուտք գործեք՝ շարունակելու համար",
+      "email": "Էլ․ հասցե",
+      "password": "Գաղտնաբառ",
+      "submit": "Մուտք գործել",
+      "loading": "Բեռնվում է...",
+      "noAccount": "Չունե՞ք հաշիվ",
+      "signup": "Գրանցվել"
+    },
+    "register": {
+      "title": "Գրանցում",
+      "headline": "Ստեղծել հաշիվ",
+      "subtitle": "Սկսեք այսօր",
+      "accountType": "Հաշվի տեսակ",
+      "candidate": "Թեկնածու",
+      "company": "Ընկերություն",
+      "firstName": "Անուն",
+      "lastName": "Ազգանուն",
+      "companyName": "Ընկերության անուն",
+      "email": "Էլ․ հասցե",
+      "password": "Գաղտնաբառ",
+      "submit": "Ստեղծել հաշիվ",
+      "haveAccount": "Արդեն ունե՞ք հաշիվ",
+      "login": "Մուտք",
+      "notConnected": "Գրանցման endpoint-ը դեռ միացված չէ։ Հաջորդ քայլը՝ կապել backend-ի հետ։"
+    },
+    "language": {
+      "label": "Լեզու",
+      "cancel": "Չեղարկել"
+    }
   },
   "debug": {
     "screenTitle": "Թեստավորման վահանակ",
@@ -31,5 +52,11 @@
     "loginFailed": "Մուտքը ձախողվեց։",
     "logoutFailed": "Ելքը ձախողվեց։",
     "currentFailed": "Չհաջողվեց ստանալ ընթացիկ սեսիան։"
+  },
+  "home": {
+    "title": "Գլխավոր",
+    "subtitle": "Սա գլխավոր էջն է։",
+    "logout": "Ելք",
+    "guest": "Հյուր ռեժիմ․ խնդրում ենք մուտք գործել։"
   }
 }

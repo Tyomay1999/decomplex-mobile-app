@@ -14,6 +14,7 @@ export type LoginRequestDto = {
   email: string;
   password: string;
   rememberUser?: boolean;
+  language?: Locale;
 };
 
 export type LoginDataDto = {
@@ -34,4 +35,5 @@ export type RefreshRequestDto = {
 export type RefreshDataDto = {
   accessToken: string;
   refreshToken: string;
+  fingerprintHash?: string;
 };

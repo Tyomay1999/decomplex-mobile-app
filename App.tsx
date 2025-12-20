@@ -1,31 +1,43 @@
+import { ensureDomExceptionPolyfill } from "./src/polyfills/domException";
+
+ensureDomExceptionPolyfill();
+
 import React, { useEffect, useState } from "react";
 import { Provider } from "react-redux";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+
 import { store } from "./src/store/store";
 import { loadSession } from "./src/storage/sessionStorage";
 import { authActions } from "./src/features/auth/authSlice";
 import { initI18n } from "./src/i18n/i18n";
 import { I18nBridge } from "./src/i18n/I18nBridge";
-import { AuthDebugScreen } from "./src/screens/AuthDebugScreen";
+import { RootNavigator } from "./src/navigation/RootNavigator";
 
 function Bootstrap(): React.JSX.Element {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+
     void (async () => {
       try {
         const session = await loadSession();
+
         store.dispatch(authActions.hydrateFromStorage(session));
         initI18n(session.language);
-        store.dispatch(authActions.setBootstrapped(true));
       } catch (e) {
         console.error("[Bootstrap] failed:", e);
         initI18n("en");
-        store.dispatch(authActions.setBootstrapped(true));
       } finally {
-        setReady(true);
+        store.dispatch(authActions.setBootstrapped(true));
+        if (mounted) setReady(true);
       }
     })();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   if (!ready) {
@@ -38,7 +50,9 @@ function Bootstrap(): React.JSX.Element {
 
   return (
     <I18nBridge>
-      <AuthDebugScreen />
+      <NavigationContainer>
+        <RootNavigator />
+      </NavigationContainer>
     </I18nBridge>
   );
 }

@@ -7,19 +7,6 @@
     "cancel": "Cancel",
     "save": "Save"
   },
-  "auth": {
-    "title": "Authentication",
-    "login": "Login",
-    "logout": "Logout",
-    "current": "Current session",
-    "isLoggedIn": "Is logged in",
-    "userId": "User ID",
-    "email": "Email",
-    "language": "Language",
-    "fingerprint": "Fingerprint",
-    "accessToken": "Access token",
-    "refreshToken": "Refresh token"
-  },
   "debug": {
     "screenTitle": "Debug Panel",
     "bootstrapped": "Bootstrapped",
@@ -31,5 +18,45 @@
     "loginFailed": "Login failed.",
     "logoutFailed": "Logout failed.",
     "currentFailed": "Failed to load current session."
+  },
+  "auth": {
+    "login": {
+      "title": "Log In",
+      "headline": "Welcome Back",
+      "subtitle": "Log in to continue",
+      "email": "Email address",
+      "password": "Password",
+      "submit": "Log In",
+      "loading": "Loading...",
+      "noAccount": "Don't have an account?",
+      "signup": "Sign up"
+    },
+    "register": {
+      "title": "Sign Up",
+      "headline": "Create Account",
+      "subtitle": "Get started today",
+      "accountType": "Account Type",
+      "candidate": "Candidate",
+      "company": "Company",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "companyName": "Company name",
+      "email": "Email address",
+      "password": "Password",
+      "submit": "Create Account",
+      "haveAccount": "Already have an account?",
+      "login": "Log in",
+      "notConnected": "Register endpoint is not connected yet. Next step: wire it to backend."
+    },
+    "language": {
+      "label": "Language",
+      "cancel": "Cancel"
+    }
+  },
+  "home": {
+    "title": "Home",
+    "subtitle": "This is the main page.",
+    "logout": "Log Out",
+    "guest": "Guest mode: please log in."
   }
 }

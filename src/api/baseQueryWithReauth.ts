@@ -1,5 +1,10 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import type {
+  BaseQueryApi,
+  BaseQueryFn,
+  FetchArgs,
+  FetchBaseQueryError,
+} from "@reduxjs/toolkit/query";
 import { Mutex } from "async-mutex";
 
 import { env } from "../config/env";
@@ -7,12 +12,14 @@ import { authActions } from "../features/auth/authSlice";
 import type { RootState } from "../store/store";
 import type { RefreshDataDto } from "../features/auth/authTypes";
 import { clearSession, persistSession } from "../storage/sessionStorage";
-import { api as rootApi } from "./api";
 
 const mutex = new Mutex();
 
+const API_REDUCER_PATH = "api" as const;
+
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: env.apiBaseUrl,
+  credentials: "include",
   prepareHeaders: (headers, api) => {
     const state = api.getState() as RootState;
 
@@ -29,9 +36,11 @@ const rawBaseQuery = fetchBaseQuery({
   },
 });
 
-async function hardClearSession(api: Parameters<BaseQueryFn>[1]) {
+async function hardClearSession(api: BaseQueryApi): Promise<void> {
   api.dispatch(authActions.clearAuth());
-  api.dispatch(rootApi.util.resetApiState());
+
+  api.dispatch({ type: `${API_REDUCER_PATH}/resetApiState` });
+
   await clearSession();
 }
 
@@ -56,6 +65,7 @@ export const baseQueryWithReauth: BaseQueryFn<
 
   if (!mutex.isLocked()) {
     const release = await mutex.acquire();
+
     try {
       const refreshResult = await rawBaseQuery(
         {
@@ -69,17 +79,20 @@ export const baseQueryWithReauth: BaseQueryFn<
 
       if (refreshResult.data) {
         const data = refreshResult.data as RefreshDataDto;
-
+        const fingerprintHash =
+          typeof data.fingerprintHash === "string" ? data.fingerprintHash : null;
         api.dispatch(
           authActions.setCredentials({
             accessToken: data.accessToken,
             refreshToken: data.refreshToken,
+            fingerprintHash: fingerprintHash || "",
           }),
         );
 
         await persistSession({
           accessToken: data.accessToken,
           refreshToken: data.refreshToken,
+          fingerprintHash: fingerprintHash,
         });
 
         result = await rawBaseQuery(args, api, extraOptions);
