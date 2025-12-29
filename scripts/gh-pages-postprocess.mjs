@@ -70,5 +70,3 @@ if (!indexHtml.includes("URLSearchParams(window.location.search)")) {
     "utf8",
   );
 }
-
-console.log(`[gh-pages] OK: basePath=${basePath} | dist patched`);

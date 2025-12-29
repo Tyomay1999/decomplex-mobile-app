@@ -13,15 +13,17 @@
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
-    "format:all": "npm run format && npm run lint && npm run typecheck"
+    "format:all": "npm run lint && npm run typecheck && npm run format"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-navigation/bottom-tabs": "^7.9.0",
     "@react-navigation/native": "^7.1.25",
     "@react-navigation/native-stack": "^7.8.6",
     "@reduxjs/toolkit": "^2.11.1",
     "async-mutex": "^0.5.0",
     "expo": "~54.0.29",
+    "expo-document-picker": "~14.0.8",
     "expo-localization": "~17.0.8",
     "expo-secure-store": "~15.0.8",
     "expo-status-bar": "~3.0.9",

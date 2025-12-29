@@ -2,10 +2,12 @@
   "common": {
     "appName": "Decomplex",
     "loading": "Loading...",
-    "error": "Error",
     "success": "Success",
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "updating": "Updating...",
+    "error": "Something went wrong",
+    "retry": "Retry"
   },
   "debug": {
     "screenTitle": "Debug Panel",
@@ -50,13 +52,55 @@
     },
     "language": {
       "label": "Language",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "en": "EN",
+      "ru": "RU",
+      "hy": "HY"
     }
   },
   "home": {
+    "jobsTitle": "Jobs",
+    "searchPlaceholder": "Search jobs...",
+    "availablePositions": "Available Positions",
+    "jobsCount": "{{count}} jobs",
     "title": "Home",
     "subtitle": "This is the main page.",
-    "logout": "Log Out",
-    "guest": "Guest mode: please log in."
+    "guest": "Guest mode: please log in.",
+    "logout": "Log Out"
+  },
+  "vacancy": {
+    "badgeNew": "New",
+
+    "companyLabel": "Company",
+    "companyIdShort": "Company {{id}}",
+    "companyNotSpecified": "Not specified",
+
+    "jobTypeLabel": "Job type",
+    "jobTypeNotSpecified": "Not specified",
+    "jobType_full_time": "Full-time",
+    "jobType_part_time": "Part-time",
+    "jobType_remote": "Remote",
+    "jobType_hybrid": "Hybrid",
+
+    "salaryLabel": "Salary",
+    "salaryNotSpecified": "Not specified",
+
+    "locationLabel": "Location",
+    "locationNotSpecified": "Not specified",
+
+    "postedLabel": "Posted",
+
+    "descriptionNotProvided": "No description provided.",
+
+    "actionsDetails": "Details",
+    "actionsSave": "Save",
+    "actionsApply": "Apply",
+
+    "guestHint": "Guest mode: sign in to unlock more options.",
+
+    "salaryFrom": "from {{from}}",
+    "salaryTo": "up to {{to}}",
+    "salaryRange": "{{from}} – {{to}}",
+    "postedDate": "{{date}}"
   }
 }

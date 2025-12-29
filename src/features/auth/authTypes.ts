@@ -1,4 +1,5 @@
 import type { Locale } from "../../storage/sessionStorage";
+import type { BackendLocale } from "../../api/locale";
 
 export type UserDto = {
   id: string;
@@ -14,7 +15,7 @@ export type LoginRequestDto = {
   email: string;
   password: string;
   rememberUser?: boolean;
-  language?: Locale;
+  language?: BackendLocale;
 };
 
 export type LoginDataDto = {
@@ -37,3 +38,13 @@ export type RefreshDataDto = {
   refreshToken: string;
   fingerprintHash?: string;
 };
+
+export type RegisterCandidateRequestDto = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  language: BackendLocale;
+};
+
+export type RegisterCandidateDataDto = LoginDataDto;

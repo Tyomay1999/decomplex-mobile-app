@@ -12,6 +12,7 @@ import { authActions } from "../features/auth/authSlice";
 import type { RootState } from "../store/store";
 import type { RefreshDataDto } from "../features/auth/authTypes";
 import { clearSession, persistSession } from "../storage/sessionStorage";
+import { mapLocaleToBackend } from "./locale";
 
 const mutex = new Mutex();
 
@@ -27,7 +28,7 @@ const rawBaseQuery = fetchBaseQuery({
     const language = state.auth.language;
     const fingerprintHash = state.auth.fingerprintHash;
 
-    headers.set("Accept-Language", language);
+    headers.set("Accept-Language", mapLocaleToBackend(language));
 
     if (fingerprintHash) headers.set("X-Client-Fingerprint", fingerprintHash);
     if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
@@ -38,9 +39,7 @@ const rawBaseQuery = fetchBaseQuery({
 
 async function hardClearSession(api: BaseQueryApi): Promise<void> {
   api.dispatch(authActions.clearAuth());
-
   api.dispatch({ type: `${API_REDUCER_PATH}/resetApiState` });
-
   await clearSession();
 }
 
@@ -52,7 +51,6 @@ export const baseQueryWithReauth: BaseQueryFn<
   await mutex.waitForUnlock();
 
   let result = await rawBaseQuery(args, api, extraOptions);
-
   if (result.error?.status !== 401) return result;
 
   const state = api.getState() as RootState;
@@ -79,20 +77,24 @@ export const baseQueryWithReauth: BaseQueryFn<
 
       if (refreshResult.data) {
         const data = refreshResult.data as RefreshDataDto;
-        const fingerprintHash =
-          typeof data.fingerprintHash === "string" ? data.fingerprintHash : null;
+
+        const nextFingerprint =
+          typeof data.fingerprintHash === "string" && data.fingerprintHash.trim().length > 0
+            ? data.fingerprintHash
+            : null;
+
         api.dispatch(
           authActions.setCredentials({
             accessToken: data.accessToken,
             refreshToken: data.refreshToken,
-            fingerprintHash: fingerprintHash || "",
+            ...(nextFingerprint ? { fingerprintHash: nextFingerprint } : {}),
           }),
         );
 
         await persistSession({
           accessToken: data.accessToken,
           refreshToken: data.refreshToken,
-          fingerprintHash: fingerprintHash,
+          fingerprintHash: nextFingerprint,
         });
 
         result = await rawBaseQuery(args, api, extraOptions);

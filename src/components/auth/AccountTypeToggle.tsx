@@ -60,14 +60,10 @@ const styles = StyleSheet.create({
   btnPressed: {
     opacity: 0.9,
   },
-  btnActive: {
-    // color will be applied from screen to keep it consistent
-  },
+  btnActive: {},
   text: {
     fontSize: 15,
     fontWeight: "600",
   },
-  textActive: {
-    // color will be applied from screen
-  },
+  textActive: {},
 });
