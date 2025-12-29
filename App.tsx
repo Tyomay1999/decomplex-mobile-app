@@ -2,10 +2,10 @@ import { ensureDomExceptionPolyfill } from "./src/polyfills/domException";
 
 ensureDomExceptionPolyfill();
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Provider } from "react-redux";
 import { Text, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 
 import { store } from "./src/store/store";
 import { loadSession } from "./src/storage/sessionStorage";
@@ -13,6 +13,19 @@ import { authActions } from "./src/features/auth/authSlice";
 import { initI18n } from "./src/i18n/i18n";
 import { I18nBridge } from "./src/i18n/I18nBridge";
 import { RootNavigator } from "./src/navigation/RootNavigator";
+
+import { ThemeProvider, ThemeContext } from "./src/app/ThemeProvider";
+
+function ThemedNavigation(): React.JSX.Element {
+  const themeCtx = useContext(ThemeContext);
+  const isDark = themeCtx?.themeName === "dark";
+
+  return (
+    <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
+      <RootNavigator />
+    </NavigationContainer>
+  );
+}
 
 function Bootstrap(): React.JSX.Element {
   const [ready, setReady] = useState(false);
@@ -50,9 +63,9 @@ function Bootstrap(): React.JSX.Element {
 
   return (
     <I18nBridge>
-      <NavigationContainer>
-        <RootNavigator />
-      </NavigationContainer>
+      <ThemeProvider>
+        <ThemedNavigation />
+      </ThemeProvider>
     </I18nBridge>
   );
 }

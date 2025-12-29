@@ -2,10 +2,12 @@
   "common": {
     "appName": "Decomplex",
     "loading": "Загрузка...",
-    "error": "Ошибка",
     "success": "Успешно",
     "cancel": "Отмена",
-    "save": "Сохранить"
+    "save": "Сохранить",
+    "updating": "Обновление...",
+    "error": "Произошла ошибка",
+    "retry": "Повторить"
   },
   "auth": {
     "login": {
@@ -38,7 +40,10 @@
     },
     "language": {
       "label": "Язык",
-      "cancel": "Отмена"
+      "cancel": "Отмена",
+      "en": "EN",
+      "ru": "RU",
+      "hy": "HY"
     }
   },
   "debug": {
@@ -54,9 +59,48 @@
     "currentFailed": "Не удалось получить текущую сессию."
   },
   "home": {
+    "jobsTitle": "Вакансии",
+    "searchPlaceholder": "Поиск вакансий...",
+    "availablePositions": "Доступные позиции",
+    "jobsCount": "{{count}} вакансий",
     "title": "Главная",
     "subtitle": "Это главная страница.",
-    "logout": "Выйти",
-    "guest": "Гостевой режим: пожалуйста, войдите."
+    "guest": "Гостевой режим: пожалуйста, войдите.",
+    "logout": "Выйти"
+  },
+  "vacancy": {
+    "badgeNew": "Новое",
+
+    "companyLabel": "Компания",
+    "companyIdShort": "Компания {{id}}",
+    "companyNotSpecified": "Не указано",
+
+    "jobTypeLabel": "Тип занятости",
+    "jobTypeNotSpecified": "Не указано",
+    "jobType_full_time": "Полная занятость",
+    "jobType_part_time": "Частичная занятость",
+    "jobType_remote": "Удалённо",
+    "jobType_hybrid": "Гибрид",
+
+    "salaryLabel": "Зарплата",
+    "salaryNotSpecified": "Не указано",
+
+    "locationLabel": "Локация",
+    "locationNotSpecified": "Не указано",
+
+    "postedLabel": "Опубликовано",
+
+    "descriptionNotProvided": "Описание отсутствует.",
+
+    "actionsDetails": "Подробнее",
+    "actionsSave": "Сохранить",
+    "actionsApply": "Откликнуться",
+
+    "guestHint": "Гостевой режим: войдите, чтобы получить больше возможностей.",
+
+    "salaryFrom": "от {{from}}",
+    "salaryTo": "до {{to}}",
+    "salaryRange": "{{from}} – {{to}}",
+    "postedDate": "{{date}}"
   }
 }

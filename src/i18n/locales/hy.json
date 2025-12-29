@@ -1,11 +1,13 @@
 {
   "common": {
     "appName": "Decomplex",
-    "loading": "Բեռնում...",
-    "error": "Սխալ",
     "success": "Հաջողությամբ",
     "cancel": "Չեղարկել",
-    "save": "Պահպանել"
+    "save": "Պահպանել",
+    "loading": "Բեռնվում է...",
+    "updating": "Թարմացվում է...",
+    "error": "Սխալ է տեղի ունեցել",
+    "retry": "Կրկնել"
   },
   "auth": {
     "login": {
@@ -38,7 +40,10 @@
     },
     "language": {
       "label": "Լեզու",
-      "cancel": "Չեղարկել"
+      "cancel": "Չեղարկել",
+      "en": "EN",
+      "ru": "RU",
+      "hy": "HY"
     }
   },
   "debug": {
@@ -54,9 +59,48 @@
     "currentFailed": "Չհաջողվեց ստանալ ընթացիկ սեսիան։"
   },
   "home": {
+    "jobsTitle": "Աշխատանքներ",
+    "searchPlaceholder": "Որոնել աշխատանքներ...",
+    "availablePositions": "Հասանելի դիրքեր",
+    "jobsCount": "{{count}} աշխատանք",
     "title": "Գլխավոր",
     "subtitle": "Սա գլխավոր էջն է։",
-    "logout": "Ելք",
-    "guest": "Հյուր ռեժիմ․ խնդրում ենք մուտք գործել։"
+    "guest": "Հյուր ռեժիմ․ խնդրում ենք մուտք գործել։",
+    "logout": "Դուրս գալ"
+  },
+  "vacancy": {
+    "badgeNew": "Նոր",
+
+    "companyLabel": "Ընկերություն",
+    "companyIdShort": "Ընկերություն {{id}}",
+    "companyNotSpecified": "Չնշված",
+
+    "jobTypeLabel": "Աշխատանքի տեսակ",
+    "jobTypeNotSpecified": "Չնշված",
+    "jobType_full_time": "Լրիվ դրույք",
+    "jobType_part_time": "Կես դրույք",
+    "jobType_remote": "Հեռավար",
+    "jobType_hybrid": "Հիբրիդ",
+
+    "salaryLabel": "Աշխատավարձ",
+    "salaryNotSpecified": "Չնշված",
+
+    "locationLabel": "Վայր",
+    "locationNotSpecified": "Չնշված",
+
+    "postedLabel": "Հրապարակվել է",
+
+    "descriptionNotProvided": "Նկարագրություն չկա։",
+
+    "actionsDetails": "Մանրամասներ",
+    "actionsSave": "Պահպանել",
+    "actionsApply": "Դիմել",
+
+    "guestHint": "Հյուր ռեժիմ․ մուտք գործեք՝ հավելյալ հնարավորությունների համար։",
+
+    "salaryFrom": "սկսած {{from}}",
+    "salaryTo": "մինչև {{to}}",
+    "salaryRange": "{{from}} – {{to}}",
+    "postedDate": "{{date}}"
   }
 }
