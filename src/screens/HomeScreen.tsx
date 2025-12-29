@@ -43,7 +43,6 @@ function formatSalaryLabel(
   if (from != null) return t("vacancy.salaryFrom", { from });
   return t("vacancy.salaryTo", { to });
 }
-
 function formatPostedLabel(t: TFunction, createdAtIso: string | null | undefined) {
   if (!createdAtIso) return "—";
   const d = new Date(createdAtIso);

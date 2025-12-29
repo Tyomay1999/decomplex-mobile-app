@@ -15,6 +15,7 @@ import { I18nBridge } from "./src/i18n/I18nBridge";
 import { RootNavigator } from "./src/navigation/RootNavigator";
 
 import { ThemeProvider, ThemeContext } from "./src/app/ThemeProvider";
+import { authApi } from "./src/features/auth/authApi";
 
 function ThemedNavigation(): React.JSX.Element {
   const themeCtx = useContext(ThemeContext);
@@ -27,6 +28,27 @@ function ThemedNavigation(): React.JSX.Element {
   );
 }
 
+async function bootstrapAuth(): Promise<void> {
+  const session = await loadSession();
+  store.dispatch(authActions.hydrateFromStorage(session));
+  initI18n(session.language);
+  const hasAnyToken = Boolean(session.accessToken) || Boolean(session.refreshToken);
+
+  if (!hasAnyToken) {
+    store.dispatch(authActions.setUser(null));
+    return;
+  }
+
+  try {
+    const user = await store.dispatch(authApi.endpoints.me.initiate()).unwrap();
+    store.dispatch(authActions.setUser(user));
+  } catch {
+    store.dispatch(authActions.setUser(null));
+  } finally {
+    store.dispatch(authApi.util.resetApiState());
+  }
+}
+
 function Bootstrap(): React.JSX.Element {
   const [ready, setReady] = useState(false);
 
@@ -35,10 +57,7 @@ function Bootstrap(): React.JSX.Element {
 
     void (async () => {
       try {
-        const session = await loadSession();
-
-        store.dispatch(authActions.hydrateFromStorage(session));
-        initI18n(session.language);
+        await bootstrapAuth();
       } catch (e) {
         console.error("[Bootstrap] failed:", e);
         initI18n("en");

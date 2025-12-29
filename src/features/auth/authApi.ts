@@ -6,6 +6,7 @@ import type {
   RefreshDataDto,
   RefreshRequestDto,
   UserDto,
+  RegisterCandidateRequestDto,
 } from "./authTypes";
 
 export type ApiResponse<T> = {
@@ -24,6 +25,24 @@ export const authApi = api.injectEndpoints({
     login: builder.mutation<LoginDataDto, LoginRequestDto>({
       query: (body) => ({
         url: "/auth/login",
+        method: "POST",
+        body,
+      }),
+      transformResponse: (response: ApiResponse<LoginDataDto>) => response.data,
+    }),
+
+    me: builder.query<UserDto, void>({
+      query: () => ({
+        url: "/auth/me",
+        method: "GET",
+      }),
+      providesTags: ["Auth"],
+      transformResponse: (response: ApiResponse<{ user: UserDto }>) => response.data.user,
+    }),
+
+    registerCandidate: builder.mutation<LoginDataDto, RegisterCandidateRequestDto>({
+      query: (body) => ({
+        url: "/auth/register/candidate",
         method: "POST",
         body,
       }),
@@ -58,4 +77,4 @@ export const authApi = api.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation, useLazyCurrentQuery } = authApi;
+export const { useLoginMutation, useRegisterCandidateMutation, useLazyMeQuery } = authApi;

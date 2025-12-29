@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import type { SerializedError } from "@reduxjs/toolkit";
 
+import { mapLocaleToBackend } from "../api/locale";
 import type { RootStackParamList } from "../navigation/RootNavigator";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { authActions } from "../features/auth/authSlice";
@@ -91,7 +92,7 @@ export function LoginScreen({ navigation }: Props): React.JSX.Element {
       const data = await login({
         email: email.trim(),
         password,
-        language,
+        language: mapLocaleToBackend(language),
       }).unwrap();
 
       const refreshToken = data.refreshToken ?? null;

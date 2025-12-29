@@ -13,6 +13,8 @@ import {
 } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import type { SerializedError } from "@reduxjs/toolkit";
 
 import type { RootStackParamList } from "../navigation/RootNavigator";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
@@ -23,9 +25,51 @@ import { LanguageMenu } from "../components/LanguageMenu";
 import { ThemeContext } from "../app/ThemeProvider";
 import type { Theme } from "../app/theme";
 
+import { useRegisterCandidateMutation } from "../features/auth/authApi";
+import { mapLocaleToBackend } from "../api/locale";
+
 type Props = NativeStackScreenProps<RootStackParamList, "Register">;
 
-type AccountType = "candidate" | "company";
+type ApiErrorShape = { message?: string; data?: unknown; success?: boolean; code?: string };
+
+function isFetchBaseQueryError(error: unknown): error is FetchBaseQueryError {
+  return typeof error === "object" && error !== null && "status" in error;
+}
+
+function getErrorMessage(error: unknown): string | null {
+  if (isFetchBaseQueryError(error)) {
+    const data = error.data;
+    if (typeof data === "string") return data;
+
+    if (typeof data === "object" && data !== null && "message" in data) {
+      const msg = (data as ApiErrorShape).message;
+      return typeof msg === "string" ? msg : null;
+    }
+    return null;
+  }
+
+  if (typeof error === "object" && error !== null) {
+    const se = error as SerializedError;
+    return typeof se.message === "string" ? se.message : null;
+  }
+
+  if (error instanceof Error) return error.message;
+
+  return null;
+}
+
+function isEmailConflict(error: unknown): boolean {
+  if (!isFetchBaseQueryError(error)) return false;
+  const data = error.data;
+
+  if (typeof data === "object" && data !== null) {
+    const obj = data as ApiErrorShape;
+    if (typeof obj.code === "string" && obj.code.includes("CONFLICT")) return true;
+    if (typeof obj.message === "string" && obj.message.toLowerCase().includes("exists"))
+      return true;
+  }
+  return error.status === 409;
+}
 
 export function RegisterScreen({ navigation }: Props): React.JSX.Element {
   const { t } = useTranslation();
@@ -40,36 +84,74 @@ export function RegisterScreen({ navigation }: Props): React.JSX.Element {
 
   const [langOpen, setLangOpen] = useState(false);
 
-  const [type, setType] = useState<AccountType>("candidate");
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [companyName, setCompanyName] = useState("");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [registerCandidate, { isLoading }] = useRegisterCandidateMutation();
+
   const placeholderColor = theme?.textTertiary ?? "rgba(0,0,0,0.45)";
 
   const canSubmit = useMemo(() => {
-    if (!email.trim() || !password) return false;
-    if (type === "company") return companyName.trim().length > 0;
+    if (!firstName.trim()) return false;
+    if (!lastName.trim()) return false;
+    if (!email.trim()) return false;
+    if (!password) return false;
     return true;
-  }, [email, password, type, companyName]);
+  }, [email, password, firstName, lastName]);
 
   const onSelectLanguage = async (next: Locale) => {
     dispatch(authActions.setLanguage(next));
     await persistSession({ language: next });
   };
 
-  const onSubmit = () => {
-    if (!canSubmit) return;
+  const onSubmit = async () => {
+    if (!canSubmit || isLoading) return;
 
-    Alert.alert(
-      t("auth.register.title", "Create account"),
-      t("auth.register.notConnected", "Registration is not connected yet."),
-      [{ text: "OK", onPress: () => navigation.replace("Login") }],
-    );
+    try {
+      const data = await registerCandidate({
+        email: email.trim(),
+        password,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        language: mapLocaleToBackend(language),
+      }).unwrap();
+
+      dispatch(
+        authActions.setCredentials({
+          accessToken: data.accessToken,
+          refreshToken: data.refreshToken ?? null,
+          fingerprintHash: data.fingerprintHash,
+        }),
+      );
+
+      dispatch(authActions.setUser(data.user));
+
+      await persistSession({
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken ?? null,
+        fingerprintHash: data.fingerprintHash,
+        language,
+      });
+
+      navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] });
+    } catch (e: unknown) {
+      if (isEmailConflict(e)) {
+        Alert.alert(
+          t("auth.register.title", "Create account"),
+          t("auth.errors.emailExists", "This email is already registered."),
+        );
+        return;
+      }
+
+      const apiMessage = getErrorMessage(e);
+      Alert.alert(
+        t("auth.register.title", "Create account"),
+        apiMessage ?? t("auth.errors.registerFailed", "Registration failed"),
+      );
+    }
   };
 
   const goHomeFallback = () => {
@@ -131,67 +213,22 @@ export function RegisterScreen({ navigation }: Props): React.JSX.Element {
           </View>
 
           <View style={styles.form}>
-            <View style={styles.group}>
-              <Text style={styles.label}>{t("auth.register.accountType", "Account type")}</Text>
-
-              <View style={styles.toggleRow}>
-                <Pressable
-                  onPress={() => setType("candidate")}
-                  style={({ pressed }) => [
-                    styles.toggleBtn,
-                    type === "candidate" && styles.toggleBtnActive,
-                    pressed && styles.pressed,
-                  ]}
-                >
-                  <Text
-                    style={[styles.toggleText, type === "candidate" && styles.toggleTextActive]}
-                  >
-                    {t("auth.register.candidate", "Candidate")}
-                  </Text>
-                </Pressable>
-
-                <Pressable
-                  onPress={() => setType("company")}
-                  style={({ pressed }) => [
-                    styles.toggleBtn,
-                    type === "company" && styles.toggleBtnActive,
-                    pressed && styles.pressed,
-                  ]}
-                >
-                  <Text style={[styles.toggleText, type === "company" && styles.toggleTextActive]}>
-                    {t("auth.register.company", "Company")}
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-
-            {type === "candidate" ? (
-              <>
-                <TextInput
-                  value={firstName}
-                  onChangeText={setFirstName}
-                  placeholder={t("auth.register.firstName", "First name")}
-                  style={styles.input}
-                  placeholderTextColor={placeholderColor}
-                />
-                <TextInput
-                  value={lastName}
-                  onChangeText={setLastName}
-                  placeholder={t("auth.register.lastName", "Last name")}
-                  style={styles.input}
-                  placeholderTextColor={placeholderColor}
-                />
-              </>
-            ) : (
-              <TextInput
-                value={companyName}
-                onChangeText={setCompanyName}
-                placeholder={t("auth.register.companyName", "Company name")}
-                style={styles.input}
-                placeholderTextColor={placeholderColor}
-              />
-            )}
-
+            <TextInput
+              value={firstName}
+              onChangeText={setFirstName}
+              placeholder={t("auth.register.firstName", "First name")}
+              style={styles.input}
+              placeholderTextColor={placeholderColor}
+            />
+            <TextInput
+              value={lastName}
+              onChangeText={setLastName}
+              placeholder={t("auth.register.lastName", "Last name")}
+              style={styles.input}
+              placeholderTextColor={placeholderColor}
+            />
+{/*sdadasd*/}
+{/*            adsda*/}
             <TextInput
               value={email}
               onChangeText={setEmail}
@@ -216,15 +253,17 @@ export function RegisterScreen({ navigation }: Props): React.JSX.Element {
 
             <Pressable
               onPress={onSubmit}
-              disabled={!canSubmit}
+              disabled={!canSubmit || isLoading}
               style={({ pressed }) => [
                 styles.primaryBtn,
-                (pressed || !canSubmit) && styles.primaryBtnPressed,
-                !canSubmit && styles.disabled,
+                (pressed || !canSubmit || isLoading) && styles.primaryBtnPressed,
+                (!canSubmit || isLoading) && styles.disabled,
               ]}
             >
               <Text style={styles.primaryBtnText}>
-                {t("auth.register.submit", "Create account")}
+                {isLoading
+                  ? t("auth.register.loading", "Loading...")
+                  : t("auth.register.submit", "Create account")}
               </Text>
             </Pressable>
 
@@ -297,26 +336,6 @@ function createStyles(theme?: Theme) {
     sub: { marginTop: 8, fontSize: 16, color: textSecondary, opacity: 0.9 },
 
     form: { gap: 20 },
-    group: { gap: 10 },
-    label: { fontSize: 15, fontWeight: "600", color: textPrimary },
-
-    toggleRow: { flexDirection: "row", gap: 12 },
-    toggleBtn: {
-      flex: 1,
-      paddingVertical: 14,
-      borderWidth: 1,
-      borderRadius: 12,
-      alignItems: "center",
-      justifyContent: "center",
-      borderColor: border,
-      backgroundColor: surface,
-    },
-    toggleBtnActive: {
-      backgroundColor: primary,
-      borderColor: primary,
-    },
-    toggleText: { fontSize: 15, fontWeight: "700", color: textPrimary },
-    toggleTextActive: { color: "#FFFFFF" },
 
     input: {
       paddingVertical: 16,
