@@ -10,10 +10,12 @@
     "export:web": "expo export --platform web",
     "postexport:ghpages": "node scripts/gh-pages-postprocess.mjs",
     "build:web:ghpages": "npm run export:web && npm run postexport:ghpages",
-    "lint": "eslint . --ext .ts,.tsx",
-    "format": "prettier --write .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "typecheck": "tsc --noEmit",
-    "format:all": "npm run lint && npm run typecheck && npm run format"
+    "check": "npm run lint && npm run typecheck",
+    "fix": "npm run lint:fix && npm run format"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",

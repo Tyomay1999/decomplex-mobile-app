@@ -7,7 +7,9 @@
     "save": "Сохранить",
     "updating": "Обновление...",
     "error": "Произошла ошибка",
-    "retry": "Повторить"
+    "retry": "Повторить",
+    "apply": "Применить",
+    "reset": "Сбросить"
   },
   "auth": {
     "login": {
@@ -66,7 +68,12 @@
     "title": "Главная",
     "subtitle": "Это главная страница.",
     "guest": "Гостевой режим: пожалуйста, войдите.",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "filtersTitle": "Фильтры",
+    "filterJobType": "Тип занятости",
+    "filterAll": "Все",
+    "filterSalaryOnly": "Только с зарплатой",
+    "filterNewOnly": "Только новые (до 3 дней)"
   },
   "vacancy": {
     "badgeNew": "Новое",
@@ -101,6 +108,28 @@
     "salaryFrom": "от {{from}}",
     "salaryTo": "до {{to}}",
     "salaryRange": "{{from}} – {{to}}",
-    "postedDate": "{{date}}"
+    "postedDate": "{{date}}",
+
+    "descriptionTitle": "Описание",
+    "detailsTitle": "Детали",
+    "statusLabel": "Статус",
+    "updatedLabel": "Обновлено",
+
+    "applyNow": "Откликнуться",
+    "applyTitle": "Отклик на вакансию",
+
+    "coverLetter": "Сопроводительное письмо",
+    "coverLetterPlaceholder": "Расскажите, почему вы подходите для этой позиции...",
+    "coverLetterHint": "Опишите ваш релевантный опыт (необязательно).",
+
+    "resumeCv": "Резюме / CV",
+    "uploadResume": "Нажмите, чтобы загрузить резюме",
+    "uploadHint": "PDF, DOC, DOCX (до 5 МБ)",
+
+    "submitApplication": "Отправить отклик",
+
+    "fileTooLarge": "Размер файла не должен превышать 5 МБ.",
+    "cvRequired": "Пожалуйста, загрузите резюме / CV.",
+    "submitFailed": "Не удалось отправить отклик. Попробуйте ещё раз."
   }
 }

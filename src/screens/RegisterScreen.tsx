@@ -227,8 +227,7 @@ export function RegisterScreen({ navigation }: Props): React.JSX.Element {
               style={styles.input}
               placeholderTextColor={placeholderColor}
             />
-{/*sdadasd*/}
-{/*            adsda*/}
+
             <TextInput
               value={email}
               onChangeText={setEmail}

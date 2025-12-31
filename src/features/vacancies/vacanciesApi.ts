@@ -1,64 +1,51 @@
 import { api } from "../../api/api";
-import type { VacancyDto, VacancyJobType, VacancyStatus } from "./vacanciesTypes";
+import type {
+  ApplyToVacancyResponseDto,
+  GetVacancyResponseDto,
+  VacancyDetailsDto,
+  VacancyDto,
+  ListVacanciesArgs,
+  ListVacanciesResponseDto,
+} from "./vacanciesTypes";
 
-type VacancyEntity = {
-  id: string;
-  companyId: string;
-  createdById: string | null;
-  title: string;
-  description: string;
-  salaryFrom: number | null;
-  salaryTo: number | null;
-  jobType: VacancyJobType;
-  location: string | null;
-  status: VacancyStatus;
-  createdAt: string;
-  updatedAt: string;
-};
+type VacancyDetailsApiPayload = VacancyDetailsDto | { vacancy: VacancyDetailsDto };
 
-type ListVacanciesResponse = {
-  success: true;
-  data: {
-    vacancies: VacancyEntity[];
-  };
-};
+function hasVacancyKey(v: VacancyDetailsApiPayload): v is { vacancy: VacancyDetailsDto } {
+  return typeof v === "object" && v !== null && "vacancy" in v;
+}
 
-export type ListVacanciesArgs = {
-  companyId?: string;
-  status?: VacancyStatus;
-  jobType?: VacancyJobType;
-};
+function normalizeDetails(raw: GetVacancyResponseDto): VacancyDetailsDto {
+  const payload: VacancyDetailsApiPayload = raw.data;
 
-function mapEntityToDto(v: VacancyEntity): VacancyDto {
+  const vacancy = hasVacancyKey(payload) ? payload.vacancy : payload;
+
   return {
-    id: v.id,
-    companyId: v.companyId,
-    createdById: v.createdById,
-
-    title: v.title,
-    description: v.description,
-
-    salaryFrom: v.salaryFrom,
-    salaryTo: v.salaryTo,
-
-    jobType: v.jobType,
-    location: v.location ?? null,
-    status: v.status,
-
-    createdAt: v.createdAt,
-    updatedAt: v.updatedAt,
+    ...vacancy,
+    location: vacancy.location ?? null,
+    salaryFrom: vacancy.salaryFrom ?? null,
+    salaryTo: vacancy.salaryTo ?? null,
   };
 }
 
+export type ApplyToVacancyArgs = {
+  vacancyId: string;
+  formData: FormData;
+};
+
 export const vacanciesApi = api.injectEndpoints({
   endpoints: (build) => ({
-    listVacancies: build.query<VacancyDto[], ListVacanciesArgs | void>({
+    listVacancies: build.query<
+      { items: VacancyDto[]; nextCursor: string | null },
+      ListVacanciesArgs | void
+    >({
       query: (args) => {
         const params = new URLSearchParams();
 
-        if (args?.companyId) params.set("companyId", args.companyId);
+        if (args?.q) params.set("q", args.q);
         if (args?.status) params.set("status", args.status);
         if (args?.jobType) params.set("jobType", args.jobType);
+        if (typeof args?.limit === "number") params.set("limit", String(args.limit));
+        if (args?.cursor) params.set("cursor", args.cursor);
 
         const qs = params.toString();
 
@@ -67,17 +54,42 @@ export const vacanciesApi = api.injectEndpoints({
           method: "GET",
         };
       },
-      transformResponse: (raw: ListVacanciesResponse) => raw.data.vacancies.map(mapEntityToDto),
+      transformResponse: (raw: ListVacanciesResponseDto) => ({
+        items: raw.data.vacancies,
+        nextCursor: raw.data.nextCursor,
+      }),
       providesTags: (result) =>
-        result
+        result?.items?.length
           ? [
               { type: "Vacancy" as const, id: "LIST" },
-              ...result.map((v) => ({ type: "Vacancy" as const, id: v.id })),
+              ...result.items.map((v) => ({ type: "Vacancy" as const, id: v.id })),
             ]
           : [{ type: "Vacancy" as const, id: "LIST" }],
+    }),
+
+    getVacancyById: build.query<VacancyDetailsDto, string>({
+      query: (id) => ({
+        url: `/vacancies/${id}`,
+        method: "GET",
+      }),
+      transformResponse: (raw: GetVacancyResponseDto) => normalizeDetails(raw),
+      providesTags: (_res, _err, id) => [{ type: "Vacancy" as const, id }],
+    }),
+
+    applyToVacancy: build.mutation<ApplyToVacancyResponseDto, ApplyToVacancyArgs>({
+      query: ({ vacancyId, formData }) => ({
+        url: `/vacancies/${vacancyId}/apply`,
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: (_res, _err, args) => [
+        { type: "Vacancy" as const, id: args.vacancyId },
+        { type: "Vacancy" as const, id: "LIST" },
+      ],
     }),
   }),
   overrideExisting: false,
 });
 
-export const { useListVacanciesQuery } = vacanciesApi;
+export const { useLazyListVacanciesQuery, useGetVacancyByIdQuery, useApplyToVacancyMutation } =
+  vacanciesApi;

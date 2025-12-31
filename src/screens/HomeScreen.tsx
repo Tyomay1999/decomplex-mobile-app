@@ -1,13 +1,20 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Animated, Easing, Modal } from "react-native";
+import { Dimensions, Platform, ScrollView } from "react-native";
+import type { VacancyJobType } from "../features/vacancies/vacanciesTypes";
 
 import type { ListRenderItem } from "react-native";
 import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
 
 import { ThemeContext } from "../app/ThemeProvider";
-import { useListVacanciesQuery } from "../features/vacancies/vacanciesApi";
+import { useLazyListVacanciesQuery } from "../features/vacancies/vacanciesApi";
 import type { VacancyDto } from "../features/vacancies/vacanciesTypes";
+
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import type { RootStackParamList } from "../navigation/RootNavigator";
 
 import { LanguageMenu } from "../components/LanguageMenu";
 import type { Locale } from "../storage/sessionStorage";
@@ -43,6 +50,7 @@ function formatSalaryLabel(
   if (from != null) return t("vacancy.salaryFrom", { from });
   return t("vacancy.salaryTo", { to });
 }
+
 function formatPostedLabel(t: TFunction, createdAtIso: string | null | undefined) {
   if (!createdAtIso) return "—";
   const d = new Date(createdAtIso);
@@ -58,6 +66,10 @@ function isNewByCreatedAt(createdAtIso: string | null | undefined): boolean {
   return diffDays <= 3;
 }
 
+const screenH = Dimensions.get("window").height;
+
+const SHEET_HEIGHT = Math.min(560, Math.max(320, Math.round(screenH * 0.75)));
+
 export function HomeScreen(): React.JSX.Element {
   const { t, i18n } = useTranslation();
 
@@ -70,10 +82,57 @@ export function HomeScreen(): React.JSX.Element {
   const themeCtx = useContext(ThemeContext);
   const theme = themeCtx?.theme;
 
-  const { data: vacancies = [], isLoading, isFetching, isError, refetch } = useListVacanciesQuery();
+  const PAGE_LIMIT = 12;
+
+  const [triggerList, listState] = useLazyListVacanciesQuery();
+
+  type JobTypeFilter = VacancyJobType | null;
+
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const [jobType, setJobType] = useState<JobTypeFilter>(null);
+  const [salaryOnly, setSalaryOnly] = useState(false);
+  const [newOnly, setNewOnly] = useState(false);
+
+  const sheetAnim = useRef(new Animated.Value(0)).current;
+
+  const openFilters = () => {
+    setFiltersOpen(true);
+    Animated.timing(sheetAnim, {
+      toValue: 1,
+      duration: 220,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const closeFilters = () => {
+    Animated.timing(sheetAnim, {
+      toValue: 0,
+      duration: 180,
+      easing: Easing.in(Easing.cubic),
+      useNativeDriver: true,
+    }).start(({ finished }) => {
+      if (finished) setFiltersOpen(false);
+    });
+  };
+
+  const applyFiltersAndReload = (q: string) => {
+    void loadFirstPage(q);
+  };
+
+  const [items, setItems] = useState<VacancyDto[]>([]);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   const [search, setSearch] = useState("");
   const [langOpen, setLangOpen] = useState(false);
+
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const requestSeqRef = useRef(0);
+  const isPagingRef = useRef(false);
+
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const onSelectLanguage = async (next: Locale) => {
     if (next === language) return;
@@ -82,21 +141,95 @@ export function HomeScreen(): React.JSX.Element {
     await persistSession({ language: next });
   };
 
-  const data = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return vacancies;
+  const openVacancy = (vacancyId: string) => {
+    if (!isAuthed) {
+      navigation.navigate("Login");
+      return;
+    }
+    navigation.navigate("VacancyDetails", { vacancyId });
+  };
 
-    return vacancies.filter((v) => {
-      const title = v.title?.toLowerCase() ?? "";
-      const companyId = (v.companyId ?? "").toLowerCase();
-      const location = (v.location ?? "").toLowerCase();
-      const jobType = (v.jobType ?? "").toLowerCase();
+  const loadFirstPage = async (q: string) => {
+    const seq = ++requestSeqRef.current;
 
-      return (
-        title.includes(q) || companyId.includes(q) || location.includes(q) || jobType.includes(q)
-      );
-    });
-  }, [search, vacancies]);
+    setInitialLoading(true);
+    setItems([]);
+    setNextCursor(null);
+
+    try {
+      const res = await triggerList(
+        {
+          q: q || undefined,
+          limit: PAGE_LIMIT,
+          status: "active",
+
+          jobType: jobType ?? undefined,
+          salaryOnly: salaryOnly ? true : undefined,
+          newOnly: newOnly ? true : undefined,
+        },
+        true,
+      ).unwrap();
+
+      if (seq !== requestSeqRef.current) return;
+
+      setItems(res.items);
+      setNextCursor(res.nextCursor);
+    } finally {
+      if (seq === requestSeqRef.current) setInitialLoading(false);
+    }
+  };
+
+  const loadNextPage = async () => {
+    if (!nextCursor) return;
+    if (listState.isFetching) return;
+    if (isPagingRef.current) return;
+
+    isPagingRef.current = true;
+    try {
+      const res = await triggerList(
+        {
+          q: search.trim() || undefined,
+          limit: PAGE_LIMIT,
+          status: "active",
+          cursor: nextCursor,
+
+          jobType: jobType ?? undefined,
+          salaryOnly: salaryOnly ? true : undefined,
+          newOnly: newOnly ? true : undefined,
+        },
+        true,
+      ).unwrap();
+
+      setItems((prev) => [...prev, ...res.items]);
+      setNextCursor(res.nextCursor);
+    } finally {
+      isPagingRef.current = false;
+    }
+  };
+
+  useEffect(() => {
+    void loadFirstPage("");
+  }, []);
+
+  useEffect(() => {
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+
+    debounceTimerRef.current = setTimeout(() => {
+      void loadFirstPage(search.trim());
+    }, 400);
+
+    return () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    };
+  }, [search]);
+
+  const jobTypeOptions: Array<{ key: string; value: JobTypeFilter; label: string }> = [
+    { key: "all", value: null, label: t("home.filterAll") },
+    { key: "full_time", value: "full_time", label: t("vacancy.jobType_full_time") },
+    { key: "part_time", value: "part_time", label: t("vacancy.jobType_part_time") },
+    { key: "remote", value: "remote", label: t("vacancy.jobType_remote") },
+    { key: "hybrid", value: "hybrid", label: t("vacancy.jobType_hybrid") },
+  ];
 
   if (!theme) return <View style={{ flex: 1 }} />;
 
@@ -112,7 +245,7 @@ export function HomeScreen(): React.JSX.Element {
 
     return (
       <Pressable
-        onPress={() => {}}
+        onPress={() => openVacancy(item.id)}
         style={({ pressed }) => [
           styles.card,
           {
@@ -188,9 +321,7 @@ export function HomeScreen(): React.JSX.Element {
 
         <View style={styles.actionsRow}>
           <Pressable
-            onPress={() => {
-              // TODO: details
-            }}
+            onPress={() => openVacancy(item.id)}
             style={({ pressed }) => [
               styles.actionBtn,
               {
@@ -208,24 +339,7 @@ export function HomeScreen(): React.JSX.Element {
             <>
               <Pressable
                 onPress={() => {
-                  // TODO: save
-                }}
-                style={({ pressed }) => [
-                  styles.actionBtn,
-                  {
-                    borderColor: theme.border,
-                    backgroundColor: pressed ? theme.background : "transparent",
-                  },
-                ]}
-              >
-                <Text style={[styles.actionText, { color: theme.textPrimary }]}>
-                  {t("vacancy.actionsSave")}
-                </Text>
-              </Pressable>
-
-              <Pressable
-                onPress={() => {
-                  // TODO: apply
+                  openVacancy(item.id);
                 }}
                 style={({ pressed }) => [
                   styles.actionBtnPrimary,
@@ -252,13 +366,7 @@ export function HomeScreen(): React.JSX.Element {
       <View style={[styles.statusBar, { backgroundColor: theme.surface }]} />
 
       <View
-        style={[
-          styles.topBar,
-          {
-            backgroundColor: theme.surface,
-            borderBottomColor: theme.border,
-          },
-        ]}
+        style={[styles.topBar, { backgroundColor: theme.surface, borderBottomColor: theme.border }]}
       >
         <Text style={[styles.topTitle, { color: theme.textPrimary }]}>{t("home.jobsTitle")}</Text>
 
@@ -307,9 +415,7 @@ export function HomeScreen(): React.JSX.Element {
         </View>
 
         <Pressable
-          onPress={() => {
-            // TODO: filters bottom sheet
-          }}
+          onPress={openFilters}
           style={({ pressed }) => [
             styles.filterBtn,
             {
@@ -327,33 +433,185 @@ export function HomeScreen(): React.JSX.Element {
           {t("home.availablePositions")}
         </Text>
         <Text style={[styles.sectionCount, { color: theme.textSecondary }]}>
-          {t("home.jobsCount", { count: data.length })}
+          {t("home.jobsCount", { count: items.length })}
         </Text>
       </View>
 
-      {isLoading ? (
+      {initialLoading ? (
         <Text style={{ paddingHorizontal: 16, color: theme.textSecondary }}>
           {t("common.loading")}
         </Text>
-      ) : isError ? (
+      ) : listState.isError ? (
         <View style={{ paddingHorizontal: 16 }}>
           <Text style={{ color: theme.textSecondary }}>{t("common.error")}</Text>
-          <Pressable onPress={refetch} style={{ marginTop: 10 }}>
+          <Pressable
+            onPress={() => {
+              void loadFirstPage(search.trim());
+            }}
+            style={{ marginTop: 10 }}
+          >
             <Text style={{ color: theme.textPrimary, fontWeight: "700" }}>{t("common.retry")}</Text>
           </Pressable>
         </View>
-      ) : isFetching ? (
-        <Text style={{ paddingHorizontal: 16, color: theme.textSecondary }}>
-          {t("common.updating")}
-        </Text>
       ) : null}
 
       <FlatList
-        data={data}
+        data={items}
         keyExtractor={(i) => i.id}
         renderItem={renderItem}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}
+        onEndReachedThreshold={0.6}
+        onEndReached={() => {
+          void loadNextPage();
+        }}
+        ListFooterComponent={
+          listState.isFetching && !initialLoading ? (
+            <Text style={{ paddingVertical: 14, textAlign: "center", color: theme.textSecondary }}>
+              {t("common.loading")}
+            </Text>
+          ) : null
+        }
       />
+
+      <Modal visible={filtersOpen} transparent animationType="none" onRequestClose={closeFilters}>
+        <Pressable style={styles.sheetOverlay} onPress={closeFilters}>
+          <Pressable onPress={(e) => e.stopPropagation()}>
+            <Animated.View
+              style={[
+                styles.sheet,
+                {
+                  height: SHEET_HEIGHT,
+                  paddingBottom: Platform.OS === "ios" ? 24 : 16,
+                  backgroundColor: theme.surface,
+                  borderColor: theme.border,
+                  transform: [
+                    {
+                      translateY: sheetAnim.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [SHEET_HEIGHT, 0],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            >
+              <View style={{ alignItems: "center", marginBottom: 10 }}>
+                <View
+                  style={{
+                    width: 44,
+                    height: 5,
+                    borderRadius: 999,
+                    backgroundColor: theme.border,
+                    opacity: 0.8,
+                  }}
+                />
+              </View>
+
+              <View style={styles.sheetHeader}>
+                <Text style={[styles.sheetTitle, { color: theme.textPrimary }]}>
+                  {t("home.filtersTitle")}
+                </Text>
+
+                <Pressable onPress={closeFilters} style={styles.sheetCloseBtn}>
+                  <Text style={{ color: theme.textSecondary, fontSize: 18 }}>✕</Text>
+                </Pressable>
+              </View>
+
+              <ScrollView
+                style={{ flex: 1 }}
+                contentContainerStyle={{ paddingBottom: 14 }}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
+              >
+                <Text style={[styles.sheetSectionLabel, { color: theme.textTertiary }]}>
+                  {t("home.filterJobType")}
+                </Text>
+
+                <View style={styles.sheetChipsRow}>
+                  {jobTypeOptions.map((x) => {
+                    const active = jobType === x.value;
+                    return (
+                      <Pressable
+                        key={x.key}
+                        onPress={() => setJobType(x.value)}
+                        style={[
+                          styles.sheetChip,
+                          {
+                            borderColor: theme.border,
+                            backgroundColor: active ? theme.background : "transparent",
+                          },
+                        ]}
+                      >
+                        <Text style={{ color: theme.textSecondary, fontWeight: "700" }}>
+                          {x.label}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+
+                <View style={{ height: 14 }} />
+
+                <Pressable
+                  onPress={() => setSalaryOnly((v) => !v)}
+                  style={[
+                    styles.sheetToggleRow,
+                    { borderColor: theme.border, backgroundColor: theme.background },
+                  ]}
+                >
+                  <Text style={{ color: theme.textPrimary, fontWeight: "700" }}>
+                    {t("home.filterSalaryOnly")}
+                  </Text>
+                  <Text style={{ color: theme.textSecondary }}>{salaryOnly ? "ON" : "OFF"}</Text>
+                </Pressable>
+
+                <Pressable
+                  onPress={() => setNewOnly((v) => !v)}
+                  style={[
+                    styles.sheetToggleRow,
+                    { borderColor: theme.border, backgroundColor: theme.background },
+                  ]}
+                >
+                  <Text style={{ color: theme.textPrimary, fontWeight: "700" }}>
+                    {t("home.filterNewOnly")}
+                  </Text>
+                  <Text style={{ color: theme.textSecondary }}>{newOnly ? "ON" : "OFF"}</Text>
+                </Pressable>
+              </ScrollView>
+
+              <View style={styles.sheetActions}>
+                <Pressable
+                  onPress={() => {
+                    setJobType(null);
+                    setSalaryOnly(false);
+                    setNewOnly(false);
+                  }}
+                  style={[
+                    styles.sheetBtn,
+                    { borderColor: theme.border, backgroundColor: "transparent" },
+                  ]}
+                >
+                  <Text style={{ color: theme.textPrimary, fontWeight: "800" }}>
+                    {t("common.reset")}
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  onPress={() => {
+                    closeFilters();
+                    applyFiltersAndReload(search.trim());
+                  }}
+                  style={[styles.sheetBtnPrimary, { backgroundColor: theme.primary }]}
+                >
+                  <Text style={{ color: theme.surface, fontWeight: "900" }}>
+                    {t("common.apply")}
+                  </Text>
+                </Pressable>
+              </View>
+            </Animated.View>
+          </Pressable>
+        </Pressable>
+      </Modal>
 
       <LanguageMenu
         visible={langOpen}
@@ -502,4 +760,64 @@ const styles = StyleSheet.create({
   actionTextPrimary: { fontSize: 13, fontWeight: "800" },
 
   guestHint: { fontSize: 12, opacity: 0.8 },
+
+  sheetOverlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0,0,0,0.35)",
+  },
+  sheet: {
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    borderWidth: 1,
+    padding: 16,
+  },
+  sheetHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
+  sheetTitle: { fontSize: 18, fontWeight: "800" },
+  sheetCloseBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  sheetSectionLabel: { fontSize: 12, fontWeight: "800", marginTop: 8, marginBottom: 10 },
+  sheetChipsRow: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
+  sheetChip: {
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  sheetToggleRow: {
+    borderWidth: 1,
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  sheetActions: { flexDirection: "row", gap: 12 },
+  sheetBtn: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  sheetBtnPrimary: {
+    flex: 1,
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });

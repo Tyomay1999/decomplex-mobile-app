@@ -7,7 +7,9 @@
     "loading": "Բեռնվում է...",
     "updating": "Թարմացվում է...",
     "error": "Սխալ է տեղի ունեցել",
-    "retry": "Կրկնել"
+    "retry": "Կրկնել",
+    "apply": "Կիրառել",
+    "reset": "Վերականգնել"
   },
   "auth": {
     "login": {
@@ -66,7 +68,12 @@
     "title": "Գլխավոր",
     "subtitle": "Սա գլխավոր էջն է։",
     "guest": "Հյուր ռեժիմ․ խնդրում ենք մուտք գործել։",
-    "logout": "Դուրս գալ"
+    "logout": "Դուրս գալ",
+    "filtersTitle": "Ֆիլտրեր",
+    "filterJobType": "Աշխատանքի տեսակ",
+    "filterAll": "Բոլորը",
+    "filterSalaryOnly": "Միայն նշված աշխատավարձով",
+    "filterNewOnly": "Միայն նորերը (մինչև 3 օր)"
   },
   "vacancy": {
     "badgeNew": "Նոր",
@@ -101,6 +108,28 @@
     "salaryFrom": "սկսած {{from}}",
     "salaryTo": "մինչև {{to}}",
     "salaryRange": "{{from}} – {{to}}",
-    "postedDate": "{{date}}"
+    "postedDate": "{{date}}",
+
+    "descriptionTitle": "Նկարագրություն",
+    "detailsTitle": "Մանրամասներ",
+    "statusLabel": "Կարգավիճակ",
+    "updatedLabel": "Թարմացված",
+
+    "applyNow": "Դիմել",
+    "applyTitle": "Դիմում աշխատանքի համար",
+
+    "coverLetter": "Ուղեկցող նամակ",
+    "coverLetterPlaceholder": "Պատմեք, թե ինչու եք համապատասխանում այս պաշտոնին...",
+    "coverLetterHint": "Նշեք ձեր համապատասխան փորձը (ըստ ցանկության)։",
+
+    "resumeCv": "Ռեզյումե / CV",
+    "uploadResume": "Սեղմեք՝ ռեզյումեն բեռնելու համար",
+    "uploadHint": "PDF, DOC, DOCX (մինչև 5 ՄԲ)",
+
+    "submitApplication": "Ուղարկել դիմումը",
+
+    "fileTooLarge": "Ֆայլի չափը չպետք է գերազանցի 5 ՄԲ։",
+    "cvRequired": "Խնդրում ենք բեռնել ձեր ռեզյումեն / CV-ն։",
+    "submitFailed": "Չհաջողվեց ուղարկել դիմումը։ Խնդրում ենք փորձել կրկին։"
   }
 }

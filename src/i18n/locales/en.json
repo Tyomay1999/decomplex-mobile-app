@@ -7,7 +7,9 @@
     "save": "Save",
     "updating": "Updating...",
     "error": "Something went wrong",
-    "retry": "Retry"
+    "retry": "Retry",
+    "apply": "Apply",
+    "reset": "Reset"
   },
   "debug": {
     "screenTitle": "Debug Panel",
@@ -66,7 +68,12 @@
     "title": "Home",
     "subtitle": "This is the main page.",
     "guest": "Guest mode: please log in.",
-    "logout": "Log Out"
+    "logout": "Log Out",
+    "filtersTitle": "Filters",
+    "filterJobType": "Employment type",
+    "filterAll": "All",
+    "filterSalaryOnly": "Only with salary",
+    "filterNewOnly": "Only new (last 3 days)"
   },
   "vacancy": {
     "badgeNew": "New",
@@ -101,6 +108,28 @@
     "salaryFrom": "from {{from}}",
     "salaryTo": "up to {{to}}",
     "salaryRange": "{{from}} – {{to}}",
-    "postedDate": "{{date}}"
+    "postedDate": "{{date}}",
+
+    "detailsTitle": "Details",
+    "descriptionTitle": "Description",
+    "statusLabel": "Status",
+    "updatedLabel": "Updated",
+
+    "applyNow": "Apply Now",
+    "applyTitle": "Apply",
+
+    "coverLetter": "Cover Letter",
+    "coverLetterPlaceholder": "Tell us why you're a great fit for this position...",
+    "coverLetterHint": "Share your relevant experience (optional).",
+
+    "resumeCv": "Resume / CV",
+    "uploadResume": "Tap to upload resume",
+    "uploadHint": "PDF, DOC, DOCX (max 5MB)",
+
+    "submitApplication": "Submit Application",
+
+    "fileTooLarge": "File must be less than 5MB.",
+    "cvRequired": "Please upload your resume / CV.",
+    "submitFailed": "Failed to submit application. Please try again."
   }
 }
