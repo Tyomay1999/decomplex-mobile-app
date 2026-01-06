@@ -131,5 +131,18 @@
     "fileTooLarge": "Размер файла не должен превышать 5 МБ.",
     "cvRequired": "Пожалуйста, загрузите резюме / CV.",
     "submitFailed": "Не удалось отправить отклик. Попробуйте ещё раз."
+  },
+  "profile": {
+    "myApplications": "Отклики",
+    "noApplications": "Вы ещё не откликались на вакансии",
+    "applicationStatus": "Статус",
+    "appliedAt": "Отклик",
+    "vacancyUnknown": "Вакансия",
+    "searchPlaceholder": "Поиск",
+    "filters": "Фильтры",
+    "sortBy": "Сортировка",
+    "applyFilters": "Применить",
+    "locationShort": "Локация",
+    "filterLocationPlaceholder": "Введите локацию"
   }
 }

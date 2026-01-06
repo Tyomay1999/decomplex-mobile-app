@@ -25,6 +25,10 @@ export function ProfileScreen(): React.JSX.Element {
 
   if (!theme) return <View style={{ flex: 1 }} />;
 
+  const goToMyApplications = () => {
+    navigation.navigate("MyApplications" as string);
+  };
+
   const logout = async () => {
     dispatch(authActions.clearAuth());
     await clearSession();
@@ -130,6 +134,19 @@ export function ProfileScreen(): React.JSX.Element {
               />
               <Row label={t("profile.role", "Role")} value={user?.role ?? "-"} theme={theme} />
             </View>
+
+            <Pressable
+                onPress={goToMyApplications}
+                style={({ pressed }) => [
+                  styles.secondaryBtn,
+                  { borderColor: theme.border, marginTop: 12 },
+                  pressed && { opacity: 0.85 },
+                ]}
+            >
+              <Text style={{ color: theme.textPrimary, fontWeight: "700", fontSize: 17 }}>
+                {t("profile.myApplications", "My applications")}
+              </Text>
+            </Pressable>
 
             <Pressable
               onPress={logout}

@@ -131,5 +131,18 @@
     "fileTooLarge": "Ֆայլի չափը չպետք է գերազանցի 5 ՄԲ։",
     "cvRequired": "Խնդրում ենք բեռնել ձեր ռեզյումեն / CV-ն։",
     "submitFailed": "Չհաջողվեց ուղարկել դիմումը։ Խնդրում ենք փորձել կրկին։"
+  },
+  "profile": {
+    "myApplications": "Իմ արձագանքները",
+    "noApplications": "Դուք դեռ չեք արձագանքել որևէ թափուր աշխատատեղի",
+    "applicationStatus": "Կարգավիճակ",
+    "appliedAt": "Արձագանքի ամսաթիվը",
+    "vacancyUnknown": "Աշխատատեղ",
+    "searchPlaceholder": "Որոնում",
+    "filters": "Ֆիլտրեր",
+    "sortBy": "Դասավորել ըստ",
+    "applyFilters": "Կիրառել",
+    "locationShort": "Վայր",
+    "filterLocationPlaceholder": "Մուտքագրեք վայրը"
   }
 }

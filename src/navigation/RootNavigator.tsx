@@ -6,6 +6,7 @@ import { LoginScreen } from "../screens/LoginScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import { MainTabs } from "./MainTabs";
 import { VacancyDetailsScreen } from "../screens/VacancyDetailsScreen";
+import { MyApplicationsScreen } from "../screens/MyApplicationsScreen";
 
 export type RootStackParamList = {
   MainTabs: undefined;
@@ -13,6 +14,7 @@ export type RootStackParamList = {
   Register: undefined;
   Debug: undefined;
   VacancyDetails: { vacancyId: string };
+    MyApplications: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -22,6 +24,7 @@ export function RootNavigator(): React.JSX.Element {
     <Stack.Navigator initialRouteName="MainTabs" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="MainTabs" component={MainTabs} />
       <Stack.Screen name="VacancyDetails" component={VacancyDetailsScreen} />
+        <Stack.Screen name="MyApplications" component={MyApplicationsScreen} />
 
       <Stack.Screen name="Debug" component={AuthDebugScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />

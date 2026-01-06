@@ -60,6 +60,7 @@
       "hy": "HY"
     }
   },
+
   "home": {
     "jobsTitle": "Jobs",
     "searchPlaceholder": "Search jobs...",
@@ -131,5 +132,19 @@
     "fileTooLarge": "File must be less than 5MB.",
     "cvRequired": "Please upload your resume / CV.",
     "submitFailed": "Failed to submit application. Please try again."
+  },
+
+  "profile": {
+    "myApplications": "My applications",
+    "noApplications": "You have not applied to any vacancies yet",
+    "applicationStatus": "Status",
+    "appliedAt": "Applied",
+    "vacancyUnknown": "Vacancy",
+    "searchPlaceholder": "Search",
+    "filters": "Filters",
+    "sortBy": "Sort by",
+    "applyFilters": "Apply",
+    "locationShort": "Location",
+    "filterLocationPlaceholder": "Type location"
   }
 }
