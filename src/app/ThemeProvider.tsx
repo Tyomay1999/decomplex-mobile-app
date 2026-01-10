@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useState } from "react";
+import React, { createContext, JSX, useMemo, useState } from "react";
 import type { PropsWithChildren } from "react";
 
 import { darkTheme, lightTheme } from "./theme";
@@ -13,7 +13,7 @@ export type ThemeContextValue = {
 
 export const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-export function ThemeProvider({ children }: PropsWithChildren): React.JSX.Element {
+export function ThemeProvider({ children }: PropsWithChildren): JSX.Element {
   const [themeName, setThemeName] = useState<ThemeName>("light");
 
   const value = useMemo<ThemeContextValue>(() => {

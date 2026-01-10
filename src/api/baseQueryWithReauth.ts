@@ -10,17 +10,16 @@ import { Mutex } from "async-mutex";
 import { env } from "../config/env";
 import { authActions } from "../features/auth/authSlice";
 import type { RootState } from "../store/store";
-import type { RefreshDataDto } from "../features/auth/authTypes";
 import { clearSession, persistSession } from "../storage/sessionStorage";
 import { mapLocaleToBackend } from "./locale";
+import { api as apiSlice } from "./api";
+import type { RefreshDataDto } from "../features/auth/authTypes";
+import { resetToLogin } from "../navigation/navigationRef";
 
 const mutex = new Mutex();
 
-const API_REDUCER_PATH = "api" as const;
-
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: env.apiBaseUrl,
-  credentials: "include",
   prepareHeaders: (headers, api) => {
     const state = api.getState() as RootState;
 
@@ -37,9 +36,38 @@ const rawBaseQuery = fetchBaseQuery({
   },
 });
 
+function isRefreshDataDto(value: unknown): value is RefreshDataDto {
+  if (!value || typeof value !== "object") return false;
+
+  const v = value as Record<string, unknown>;
+  const accessTokenOk = typeof v.accessToken === "string" && v.accessToken.trim().length > 0;
+
+  const refreshTokenOk =
+    v.refreshToken === null ||
+    (typeof v.refreshToken === "string" && v.refreshToken.trim().length > 0);
+
+  const fingerprintOk =
+    v.fingerprintHash === undefined ||
+    v.fingerprintHash === null ||
+    (typeof v.fingerprintHash === "string" && v.fingerprintHash.trim().length > 0);
+
+  return accessTokenOk && refreshTokenOk && fingerprintOk;
+}
+
+function isUnauthorized(error: FetchBaseQueryError | undefined): boolean {
+  return Boolean(error && typeof error.status === "number" && error.status === 401);
+}
+
 async function hardClearSession(api: BaseQueryApi): Promise<void> {
+  const state = api.getState() as RootState;
+
+  if (!state.auth.forcedLogout) {
+    api.dispatch(authActions.setForcedLogout(true));
+    resetToLogin();
+  }
+
   api.dispatch(authActions.clearAuth());
-  api.dispatch({ type: `${API_REDUCER_PATH}/resetApiState` });
+  api.dispatch(apiSlice.util.resetApiState());
   await clearSession();
 }
 
@@ -51,9 +79,17 @@ export const baseQueryWithReauth: BaseQueryFn<
   await mutex.waitForUnlock();
 
   let result = await rawBaseQuery(args, api, extraOptions);
-  if (result.error?.status !== 401) return result;
+
+  if (!isUnauthorized(result.error)) {
+    return result;
+  }
 
   const state = api.getState() as RootState;
+
+  if (state.auth.forcedLogout) {
+    return result;
+  }
+
   const refreshToken = state.auth.refreshToken;
 
   if (!refreshToken) {
@@ -75,29 +111,31 @@ export const baseQueryWithReauth: BaseQueryFn<
         extraOptions,
       );
 
-      if (refreshResult.data) {
-        const data = refreshResult.data as RefreshDataDto;
-
+      if (isRefreshDataDto(refreshResult.data)) {
         const nextFingerprint =
-          typeof data.fingerprintHash === "string" && data.fingerprintHash.trim().length > 0
-            ? data.fingerprintHash
+          typeof refreshResult.data.fingerprintHash === "string"
+            ? refreshResult.data.fingerprintHash
             : null;
 
         api.dispatch(
           authActions.setCredentials({
-            accessToken: data.accessToken,
-            refreshToken: data.refreshToken,
+            accessToken: refreshResult.data.accessToken,
+            refreshToken: refreshResult.data.refreshToken,
             ...(nextFingerprint ? { fingerprintHash: nextFingerprint } : {}),
           }),
         );
 
         await persistSession({
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
+          accessToken: refreshResult.data.accessToken,
+          refreshToken: refreshResult.data.refreshToken,
           fingerprintHash: nextFingerprint,
         });
 
         result = await rawBaseQuery(args, api, extraOptions);
+
+        if (isUnauthorized(result.error)) {
+          await hardClearSession(api);
+        }
       } else {
         await hardClearSession(api);
       }
@@ -107,6 +145,10 @@ export const baseQueryWithReauth: BaseQueryFn<
   } else {
     await mutex.waitForUnlock();
     result = await rawBaseQuery(args, api, extraOptions);
+
+    if (isUnauthorized(result.error)) {
+      await hardClearSession(api);
+    }
   }
 
   return result;

@@ -7,7 +7,13 @@
     "save": "Сохранить",
     "updating": "Обновление...",
     "error": "Произошла ошибка",
-    "retry": "Повторить"
+    "refreshed": "Обновлено",
+    "retry": "Повторить",
+    "apply": "Применить",
+    "reset": "Сбросить",
+    "on": "ВКЛ",
+    "off": "ВЫКЛ",
+    "clear": "Сбросить"
   },
   "auth": {
     "login": {
@@ -19,7 +25,10 @@
       "submit": "Войти",
       "loading": "Загрузка...",
       "noAccount": "Нет аккаунта?",
-      "signup": "Регистрация"
+      "signup": "Регистрация",
+      "rememberMe": "Запомнить меня",
+      "refreshed": "Обновлено",
+      "invalid": "Неверный email или пароль."
     },
     "register": {
       "title": "Регистрация",
@@ -44,6 +53,14 @@
       "en": "EN",
       "ru": "RU",
       "hy": "HY"
+    },
+    "errors": {
+      "missingRefreshToken": "Отсутствует refresh token.",
+      "loginFailed": "Ошибка входа.",
+      "logoutFailed": "Ошибка выхода.",
+      "currentFailed": "Не удалось получить текущую сессию.",
+      "emailExists": "Этот email уже зарегистрирован.",
+      "registerFailed": "Не удалось зарегистрироваться."
     }
   },
   "debug": {
@@ -51,12 +68,6 @@
     "bootstrapped": "Инициализировано",
     "yes": "ДА",
     "no": "НЕТ"
-  },
-  "errors": {
-    "missingRefreshToken": "Отсутствует refresh token.",
-    "loginFailed": "Ошибка входа.",
-    "logoutFailed": "Ошибка выхода.",
-    "currentFailed": "Не удалось получить текущую сессию."
   },
   "home": {
     "jobsTitle": "Вакансии",
@@ -66,7 +77,20 @@
     "title": "Главная",
     "subtitle": "Это главная страница.",
     "guest": "Гостевой режим: пожалуйста, войдите.",
-    "logout": "Выйти"
+    "filters": {
+      "title": "Фильтры",
+      "jobType": "Тип занятости",
+      "all": "Все",
+      "salaryOnly": "Только с зарплатой",
+      "newOnly": "Только новые"
+    },
+    "state": {
+      "errorTitle": "Произошла ошибка",
+      "errorSubtitle": "Проверьте интернет-соединение и повторите попытку.",
+      "emptyTitle": "Ничего не найдено",
+      "emptySubtitle": "Попробуйте изменить запрос или сбросить фильтры.",
+      "clear": "Сбросить"
+    }
   },
   "vacancy": {
     "badgeNew": "Новое",
@@ -101,6 +125,117 @@
     "salaryFrom": "от {{from}}",
     "salaryTo": "до {{to}}",
     "salaryRange": "{{from}} – {{to}}",
-    "postedDate": "{{date}}"
+    "postedDate": "{{date}}",
+
+    "descriptionTitle": "Описание",
+    "detailsTitle": "Детали",
+    "statusLabel": "Статус",
+    "updatedLabel": "Обновлено",
+
+    "applyNow": "Откликнуться",
+    "appliedAlready": "Вы уже откликнулись",
+    "applyTitle": "Отклик на вакансию",
+    "applySuccess": {
+      "title": "Успешно",
+      "message": "Отклик отправлен.",
+      "already": "Вы уже откликались на эту вакансию."
+    },
+
+    "coverLetter": "Сопроводительное письмо",
+    "coverLetterPlaceholder": "Расскажите, почему вы подходите для этой позиции...",
+    "coverLetterHint": "Опишите ваш релевантный опыт (необязательно).",
+
+    "resumeCv": "Резюме / CV",
+    "uploadResume": "Нажмите, чтобы загрузить резюме",
+    "uploadHint": "PDF, DOC, DOCX (до 5 МБ)",
+
+    "submitApplication": "Отправить отклик",
+
+    "fileTooLarge": "Размер файла не должен превышать 5 МБ.",
+    "cvRequired": "Пожалуйста, загрузите резюме / CV.",
+    "submitFailed": "Не удалось отправить отклик. Попробуйте ещё раз.",
+
+    "status": {
+      "active": "Активна",
+      "inactive": "Неактивна",
+      "closed": "Закрыта",
+      "archived": "В архиве",
+      "draft": "Черновик"
+    }
+  },
+  "profile": {
+    "title": "Профиль",
+    "myApplications": "Отклики",
+    "noApplications": "Вы ещё не откликались на вакансии",
+    "applicationStatus": "Статус",
+    "appliedAt": "Отклик",
+    "vacancyUnknown": "Вакансия",
+    "searchPlaceholder": "Поиск",
+    "filters": "Фильтры",
+    "sortBy": "Сортировка",
+    "applyFilters": "Применить",
+    "filterLocationPlaceholder": "Введите локацию",
+    "logout": "Выйти",
+    "sortNewest": "Сначала новые",
+    "sortOldest": "Сначала старые",
+    "sortTitleAz": "Название A–Z",
+    "sortTitleZa": "Название Z–A",
+    "sortLocationAz": "Локация",
+    "clearFilters": "Сбросить",
+
+    "guest": {
+      "title": "Гость",
+      "subtitle": "Вы не вошли в систему",
+      "hint": "Пожалуйста, войдите, чтобы просмотреть профиль"
+    },
+    "account": {
+      "sectionTitle": "Информация об аккаунте",
+      "email": "Email",
+      "accountType": "Тип аккаунта",
+      "role": "Роль"
+    },
+
+    "roles": {
+      "candidate": "кандидат",
+      "company": "компания",
+      "admin": "администратор"
+    },
+
+    "logoutConfirm": {
+      "title": "Выйти из аккаунта?",
+      "message": "Вы уверены, что хотите выйти из своего аккаунта?"
+    }
+  },
+
+  "applications": {
+    "empty": {
+      "title": "Откликов пока нет",
+      "subtitle": "Когда вы откликнетесь на вакансию, она появится здесь.",
+      "primary": "Смотреть вакансии",
+      "secondary": "Обновить"
+    }
+  },
+
+  "navigation": {
+    "home": "Главная",
+    "profile": "Профиль"
+  },
+
+  "toast": {
+    "errorTitle": "Ошибка"
+  },
+  "errors": {
+    "network": "Ошибка сети. Проверьте подключение к интернету.",
+    "badResponse": "Неожиданный ответ сервера.",
+    "unauthorized": "Требуется авторизация. Войдите в аккаунт.",
+    "forbidden": "Доступ запрещён.",
+    "notFound": "Не найдено.",
+    "conflict": "Конфликт. Попробуйте ещё раз.",
+    "validation": "Проверьте введённые данные.",
+    "server": "Ошибка сервера. Попробуйте позже.",
+    "requestFailed": "Запрос не выполнен. Попробуйте ещё раз.",
+    "codes": {
+      "ROUTE_NOT_FOUND": "Маршрут не найден."
+    }
   }
 }

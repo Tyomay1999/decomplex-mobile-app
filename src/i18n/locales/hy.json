@@ -7,7 +7,13 @@
     "loading": "Բեռնվում է...",
     "updating": "Թարմացվում է...",
     "error": "Սխալ է տեղի ունեցել",
-    "retry": "Կրկնել"
+    "retry": "Կրկնել",
+    "apply": "Կիրառել",
+    "reset": "Վերականգնել",
+    "on": "Միացված",
+    "off": "Անջատված",
+    "clear": "Մաքրել",
+    "refreshed": "Թարմացվեց"
   },
   "auth": {
     "login": {
@@ -19,7 +25,9 @@
       "submit": "Մուտք գործել",
       "loading": "Բեռնվում է...",
       "noAccount": "Չունե՞ք հաշիվ",
-      "signup": "Գրանցվել"
+      "signup": "Գրանցվել",
+      "rememberMe": "Հիշել ինձ",
+      "invalid": "Սխալ էլ․փոստ կամ գաղտնաբառ։"
     },
     "register": {
       "title": "Գրանցում",
@@ -44,6 +52,14 @@
       "en": "EN",
       "ru": "RU",
       "hy": "HY"
+    },
+    "errors": {
+      "missingRefreshToken": "Refresh token-ը բացակայում է։",
+      "loginFailed": "Մուտքը ձախողվեց։",
+      "logoutFailed": "Ելքը ձախողվեց։",
+      "currentFailed": "Չհաջողվեց ստանալ ընթացիկ սեսիան։",
+      "emailExists": "Այս էլ․փոստը արդեն գրանցված է։",
+      "registerFailed": "Գրանցումը չստացվեց։"
     }
   },
   "debug": {
@@ -51,12 +67,6 @@
     "bootstrapped": "Սկզբնավորված է",
     "yes": "ԱՅՈ",
     "no": "ՈՉ"
-  },
-  "errors": {
-    "missingRefreshToken": "Refresh token-ը բացակայում է։",
-    "loginFailed": "Մուտքը ձախողվեց։",
-    "logoutFailed": "Ելքը ձախողվեց։",
-    "currentFailed": "Չհաջողվեց ստանալ ընթացիկ սեսիան։"
   },
   "home": {
     "jobsTitle": "Աշխատանքներ",
@@ -66,41 +76,147 @@
     "title": "Գլխավոր",
     "subtitle": "Սա գլխավոր էջն է։",
     "guest": "Հյուր ռեժիմ․ խնդրում ենք մուտք գործել։",
-    "logout": "Դուրս գալ"
+    "filters": {
+      "title": "Ֆիլտրեր",
+      "jobType": "Աշխատանքի տեսակ",
+      "all": "Բոլորը",
+      "salaryOnly": "Միայն աշխատավարձով",
+      "newOnly": "Միայն նոր"
+    },
+    "state": {
+      "errorTitle": "Սխալ է տեղի ունեցել",
+      "errorSubtitle": "Խնդրում ենք ստուգել ինտերնետ կապը և կրկին փորձել։",
+      "emptyTitle": "Թափուր աշխատատեղեր չեն գտնվել",
+      "emptySubtitle": "Փորձեք փոխել որոնման հարցումը կամ մաքրել ֆիլտրերը։",
+      "clear": "Մաքրել"
+    }
   },
   "vacancy": {
     "badgeNew": "Նոր",
-
     "companyLabel": "Ընկերություն",
     "companyIdShort": "Ընկերություն {{id}}",
     "companyNotSpecified": "Չնշված",
-
     "jobTypeLabel": "Աշխատանքի տեսակ",
     "jobTypeNotSpecified": "Չնշված",
     "jobType_full_time": "Լրիվ դրույք",
     "jobType_part_time": "Կես դրույք",
     "jobType_remote": "Հեռավար",
     "jobType_hybrid": "Հիբրիդ",
-
     "salaryLabel": "Աշխատավարձ",
     "salaryNotSpecified": "Չնշված",
-
     "locationLabel": "Վայր",
     "locationNotSpecified": "Չնշված",
-
     "postedLabel": "Հրապարակվել է",
-
     "descriptionNotProvided": "Նկարագրություն չկա։",
-
     "actionsDetails": "Մանրամասներ",
     "actionsSave": "Պահպանել",
     "actionsApply": "Դիմել",
-
     "guestHint": "Հյուր ռեժիմ․ մուտք գործեք՝ հավելյալ հնարավորությունների համար։",
-
     "salaryFrom": "սկսած {{from}}",
     "salaryTo": "մինչև {{to}}",
     "salaryRange": "{{from}} – {{to}}",
-    "postedDate": "{{date}}"
+    "postedDate": "{{date}}",
+    "descriptionTitle": "Նկարագրություն",
+    "detailsTitle": "Մանրամասներ",
+    "statusLabel": "Կարգավիճակ",
+    "updatedLabel": "Թարմացված",
+    "applyNow": "Դիմել",
+    "appliedAlready": "Դուք արդեն դիմել եք",
+    "applyTitle": "Դիմում աշխատանքի համար",
+    "applySuccess": {
+      "title": "Հաջողվեց",
+      "message": "Հայտը ուղարկվել է։",
+      "already": "Դուք արդեն դիմել եք այս вакансիային։"
+    },
+
+    "coverLetter": "Ուղեկցող նամակ",
+    "coverLetterPlaceholder": "Պատմեք, թե ինչու եք համապատասխանում այս պաշտոնին...",
+    "coverLetterHint": "Նշեք ձեր համապատասխան փորձը (ըստ ցանկության)։",
+    "resumeCv": "Ռեզյումե / CV",
+    "uploadResume": "Սեղմեք՝ ռեզյումեն բեռնելու համար",
+    "uploadHint": "PDF, DOC, DOCX (մինչև 5 ՄԲ)",
+    "submitApplication": "Ուղարկել դիմումը",
+    "fileTooLarge": "Ֆայլի չափը չպետք է գերազանցի 5 ՄԲ։",
+    "cvRequired": "Խնդրում ենք բեռնել ձեր ռեզյումեն / CV-ն։",
+    "submitFailed": "Չհաջողվեց ուղարկել դիմումը։ Խնդրում ենք փորձել կրկին։",
+
+    "status": {
+      "active": "Ակտիվ",
+      "inactive": "Ոչ ակտիվ",
+      "closed": "Փակված",
+      "archived": "Արխիվացված",
+      "draft": "Սևագիր"
+    }
+  },
+  "profile": {
+    "title": "Պրոֆիլ",
+    "myApplications": "Իմ արձագանքները",
+    "noApplications": "Դուք դեռ չեք արձագանքել որևէ թափուր աշխատատեղի",
+    "applicationStatus": "Կարգավիճակ",
+    "appliedAt": "Արձագանքի ամսաթիվը",
+    "vacancyUnknown": "Աշխատատեղ",
+    "searchPlaceholder": "Որոնում",
+    "filters": "Ֆիլտրեր",
+    "sortBy": "Դասավորել ըստ",
+    "applyFilters": "Կիրառել",
+    "filterLocationPlaceholder": "Մուտքագրեք վայրը",
+    "logout": "Դուրս գալ",
+    "sortNewest": "Նորերը սկզբում",
+    "sortOldest": "Հները սկզբում",
+    "sortTitleAz": "Վերնագիր A–Z",
+    "sortTitleZa": "Վերնագիր Z–A",
+    "sortLocationAz": "Տեղակայություն",
+    "clearFilters": "Մաքրել",
+    "guest": {
+      "title": "Հյուր օգտատեր",
+      "subtitle": "Մուտք գործած չէ",
+      "hint": "Խնդրում ենք մուտք գործել՝ ձեր պրոֆիլը դիտելու համար"
+    },
+    "account": {
+      "sectionTitle": "Հաշվի տվյալներ",
+      "email": "Էլ. փոստ",
+      "accountType": "Հաշվի տեսակ",
+      "role": "Դեր"
+    },
+    "roles": {
+      "candidate": "թեկնածու",
+      "company": "ընկերություն",
+      "admin": "ադմինիստրատոր"
+    },
+
+    "logoutConfirm": {
+      "title": "Դուրս գալ հաշվից՞",
+      "message": "Վստա՞հ եք, որ ցանկանում եք դուրս գալ ձեր հաշվից։"
+    }
+  },
+  "applications": {
+    "empty": {
+      "title": "Դիմումներ դեռ չկան",
+      "subtitle": "Երբ դիմեք որևէ աշխատատեղի, այն կհայտնվի այստեղ։",
+      "primary": "Դիտել աշխատատեղերը",
+      "secondary": "Թարմացնել"
+    }
+  },
+  "navigation": {
+    "home": "Գլխավոր",
+    "profile": "Պրոֆիլ"
+  },
+
+  "toast": {
+    "errorTitle": "Սխալ"
+  },
+  "errors": {
+    "network": "Ցանցային սխալ․ ստուգեք ինտերնետ կապը։",
+    "badResponse": "Սերվերի անսպասելի պատասխան։",
+    "unauthorized": "Անհրաժեշտ է մուտք գործել։",
+    "forbidden": "Մուտքը արգելված է։",
+    "notFound": "Չի գտնվել։",
+    "conflict": "Կոնֆլիկտ․ փորձեք կրկին։",
+    "validation": "Ստուգեք մուտքագրված տվյալները։",
+    "server": "Սերվերի սխալ․ փորձեք ավելի ուշ։",
+    "requestFailed": "Հարցումը չի հաջողվել։ Փորձեք կրկին։",
+    "codes": {
+      "ROUTE_NOT_FOUND": "Ուղին չի գտնվել։"
+    }
   }
 }
