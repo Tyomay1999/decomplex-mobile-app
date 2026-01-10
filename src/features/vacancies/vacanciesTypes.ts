@@ -3,14 +3,25 @@ export type VacancyStatus = "active" | "archived";
 
 export type VacancyDto = {
   id: string;
-  companyId: string;
-  title: string;
-  description: string;
-  salaryFrom: number | null;
-  salaryTo: number | null;
-  jobType: VacancyJobType;
-  location: string | null;
-  createdAt: string;
+
+  title?: string | null;
+  description?: string | null;
+  location?: string | null;
+  companyId?: string | null;
+
+  jobType?: string | null;
+  salaryFrom?: number | null;
+  salaryTo?: number | null;
+
+  status?: string | null;
+
+  createdAt?: string | null;
+  updatedAt?: string | null;
+
+  applied?: boolean;
+  isApplied?: boolean;
+  hasApplied?: boolean;
+  myApplicationId?: string | null;
 };
 
 export type VacancyDetailsDto = VacancyDto & {

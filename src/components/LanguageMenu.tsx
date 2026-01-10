@@ -1,5 +1,7 @@
-import React from "react";
-import { Modal, Pressable, StyleSheet, Text } from "react-native";
+import React, { JSX, useMemo } from "react";
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import type { Locale } from "../storage/sessionStorage";
 import type { Theme } from "../app/theme";
 
@@ -31,7 +33,9 @@ export function LanguageMenu({
   onClose,
   onSelect,
   theme,
-}: Props): React.JSX.Element {
+}: Props): JSX.Element {
+  const insets = useSafeAreaInsets();
+
   const t = theme ?? {
     surface: "#FFFFFF",
     border: "rgba(0,0,0,0.10)",
@@ -40,13 +44,22 @@ export function LanguageMenu({
     primary: "#3B82F6",
   };
 
+  const sheetStyle = useMemo(
+    () => [
+      styles.sheet,
+      {
+        backgroundColor: t.surface,
+        borderColor: t.border,
+        paddingBottom: 16 + Math.max(0, insets.bottom),
+      },
+    ],
+    [insets.bottom, t.border, t.surface],
+  );
+
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable style={styles.overlay} onPress={onClose}>
-        <Pressable
-          style={[styles.sheet, { backgroundColor: t.surface, borderColor: t.border }]}
-          onPress={() => undefined}
-        >
+        <Pressable style={sheetStyle} onPress={() => undefined}>
           <Text style={[styles.title, { color: t.textSecondary }]}>{title}</Text>
 
           {OPTIONS.map((opt) => {
@@ -74,6 +87,8 @@ export function LanguageMenu({
             );
           })}
 
+          <View style={{ height: 6 }} />
+
           <Pressable
             onPress={onClose}
             style={({ pressed }) => [
@@ -97,7 +112,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   sheet: {
-    padding: 16,
+    paddingTop: 16,
+    paddingHorizontal: 16,
     borderTopLeftRadius: 18,
     borderTopRightRadius: 18,
     borderTopWidth: 1,
@@ -128,7 +144,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 6,
     borderWidth: 1,
   },
   cancelText: { fontSize: 16, fontWeight: "700" },

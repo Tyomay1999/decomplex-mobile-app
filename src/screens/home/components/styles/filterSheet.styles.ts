@@ -1,0 +1,67 @@
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0,0,0,0.35)",
+  },
+  sheet: {
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    borderWidth: 1,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+  },
+  grabberWrap: { alignItems: "center", paddingBottom: 8 },
+  grabber: {
+    width: 44,
+    height: 5,
+    borderRadius: 999,
+    opacity: 0.8,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  title: { fontSize: 18, fontWeight: "900" },
+  closeBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  scrollContent: { paddingBottom: 10 },
+  sectionLabel: { fontSize: 12, fontWeight: "900", marginTop: 6, marginBottom: 10 },
+  chipsRow: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
+  chip: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 10 },
+  toggleRow: {
+    borderWidth: 1,
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  actions: { flexDirection: "row", gap: 12, paddingTop: 8, paddingBottom: 2 },
+  btn: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 14,
+    paddingVertical: 13,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  btnPrimary: {
+    flex: 1,
+    borderRadius: 14,
+    paddingVertical: 13,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

@@ -9,19 +9,17 @@
     "error": "Something went wrong",
     "retry": "Retry",
     "apply": "Apply",
-    "reset": "Reset"
+    "reset": "Reset",
+    "on": "ON",
+    "off": "OFF",
+    "clear": "Clear",
+    "refreshed": "Updated"
   },
   "debug": {
     "screenTitle": "Debug Panel",
     "bootstrapped": "Bootstrapped",
     "yes": "YES",
     "no": "NO"
-  },
-  "errors": {
-    "missingRefreshToken": "Refresh token is missing.",
-    "loginFailed": "Login failed.",
-    "logoutFailed": "Logout failed.",
-    "currentFailed": "Failed to load current session."
   },
   "auth": {
     "login": {
@@ -33,7 +31,9 @@
       "submit": "Log In",
       "loading": "Loading...",
       "noAccount": "Don't have an account?",
-      "signup": "Sign up"
+      "signup": "Sign up",
+      "rememberMe": "Remember me",
+      "invalid": "Invalid email or password."
     },
     "register": {
       "title": "Sign Up",
@@ -58,6 +58,14 @@
       "en": "EN",
       "ru": "RU",
       "hy": "HY"
+    },
+    "errors": {
+      "missingRefreshToken": "Refresh token is missing.",
+      "loginFailed": "Login failed.",
+      "logoutFailed": "Logout failed.",
+      "currentFailed": "Failed to load current session.",
+      "emailExists": "This email is already registered.",
+      "registerFailed": "Registration failed."
     }
   },
 
@@ -69,12 +77,20 @@
     "title": "Home",
     "subtitle": "This is the main page.",
     "guest": "Guest mode: please log in.",
-    "logout": "Log Out",
-    "filtersTitle": "Filters",
-    "filterJobType": "Employment type",
-    "filterAll": "All",
-    "filterSalaryOnly": "Only with salary",
-    "filterNewOnly": "Only new (last 3 days)"
+    "filters": {
+      "all": "All",
+      "jobType": "Employment type",
+      "title": "Filters",
+      "salaryOnly": "Salary only",
+      "newOnly": "New only"
+    },
+    "state": {
+      "errorTitle": "Something went wrong",
+      "errorSubtitle": "Check your connection and try again.",
+      "emptyTitle": "No jobs found",
+      "emptySubtitle": "Try changing the search or clearing filters.",
+      "clear": "Clear"
+    }
   },
   "vacancy": {
     "badgeNew": "New",
@@ -117,7 +133,14 @@
     "updatedLabel": "Updated",
 
     "applyNow": "Apply Now",
+    "appliedAlready": "Already applied",
     "applyTitle": "Apply",
+
+    "applySuccess": {
+      "title": "Success",
+      "message": "Application sent.",
+      "already": "You have already applied."
+    },
 
     "coverLetter": "Cover Letter",
     "coverLetterPlaceholder": "Tell us why you're a great fit for this position...",
@@ -131,10 +154,19 @@
 
     "fileTooLarge": "File must be less than 5MB.",
     "cvRequired": "Please upload your resume / CV.",
-    "submitFailed": "Failed to submit application. Please try again."
+    "submitFailed": "Failed to submit application. Please try again.",
+
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "closed": "Closed",
+      "archived": "Archived",
+      "draft": "Draft"
+    }
   },
 
   "profile": {
+    "title": "Profile",
     "myApplications": "My applications",
     "noApplications": "You have not applied to any vacancies yet",
     "applicationStatus": "Status",
@@ -142,9 +174,70 @@
     "vacancyUnknown": "Vacancy",
     "searchPlaceholder": "Search",
     "filters": "Filters",
+    "clearFilters": "Clear",
     "sortBy": "Sort by",
     "applyFilters": "Apply",
-    "locationShort": "Location",
-    "filterLocationPlaceholder": "Type location"
+    "filterLocationPlaceholder": "Type location",
+    "logout": "Log Out",
+    "sortNewest": "Newest",
+    "sortOldest": "Oldest",
+    "sortTitleAz": "Title A–Z",
+    "sortTitleZa": "Title Z–A",
+    "sortLocationAz": "Location",
+
+    "guest": {
+      "title": "Guest User",
+      "subtitle": "Not logged in",
+      "hint": "Please log in to view your profile"
+    },
+    "account": {
+      "sectionTitle": "Account Information",
+      "email": "Email",
+      "accountType": "Account Type",
+      "role": "Role"
+    },
+
+    "roles": {
+      "candidate": "candidate",
+      "company": "company",
+      "admin": "admin"
+    },
+
+    "logoutConfirm": {
+      "title": "Log out?",
+      "message": "Are you sure you want to log out of your account?"
+    }
+  },
+
+  "applications": {
+    "empty": {
+      "title": "No applications yet",
+      "subtitle": "When you apply to a vacancy, it will appear here.",
+      "primary": "Browse jobs",
+      "secondary": "Refresh"
+    }
+  },
+
+  "navigation": {
+    "home": "Home",
+    "profile": "Profile"
+  },
+
+  "toast": {
+    "errorTitle": "Error"
+  },
+  "errors": {
+    "network": "Network error. Please check your connection.",
+    "badResponse": "Unexpected server response.",
+    "unauthorized": "Unauthorized. Please sign in.",
+    "forbidden": "Access denied.",
+    "notFound": "Not found.",
+    "conflict": "Conflict. Please try again.",
+    "validation": "Please check the entered data.",
+    "server": "Server error. Please try again later.",
+    "requestFailed": "Request failed. Please try again.",
+    "codes": {
+      "ROUTE_NOT_FOUND": "Route not found."
+    }
   }
 }

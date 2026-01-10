@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { JSX, ReactNode, useEffect } from "react";
 import { useAppSelector } from "../store/hooks";
 import { i18n } from "./i18n";
 
-export function I18nBridge({ children }: { children: React.ReactNode }): React.JSX.Element {
+export function I18nBridge({ children }: { children: ReactNode }): JSX.Element {
   const language = useAppSelector((s) => s.auth.language);
 
   useEffect(() => {

@@ -9,6 +9,7 @@ export type AuthState = {
   user: UserDto | null;
   language: Locale;
   bootstrapped: boolean;
+  forcedLogout: boolean;
 };
 
 const initialState: AuthState = {
@@ -18,6 +19,7 @@ const initialState: AuthState = {
   user: null,
   language: "en",
   bootstrapped: false,
+  forcedLogout: false,
 };
 
 export const authSlice = createSlice({
@@ -37,6 +39,7 @@ export const authSlice = createSlice({
       state.refreshToken = action.payload.refreshToken;
       state.fingerprintHash = action.payload.fingerprintHash;
       state.language = action.payload.language;
+      state.forcedLogout = false;
     },
 
     setBootstrapped(state, action: PayloadAction<boolean>) {
@@ -57,6 +60,7 @@ export const authSlice = createSlice({
     ) {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
+      state.forcedLogout = false;
 
       if (typeof action.payload.fingerprintHash === "string") {
         state.fingerprintHash = action.payload.fingerprintHash;
@@ -65,6 +69,10 @@ export const authSlice = createSlice({
 
     setUser(state, action: PayloadAction<UserDto | null>) {
       state.user = action.payload ?? null;
+    },
+
+    setForcedLogout(state, action: PayloadAction<boolean>) {
+      state.forcedLogout = action.payload;
     },
 
     clearAuth(state) {
