@@ -43,7 +43,8 @@ export function HomeScreen(): JSX.Element {
     return hasSearch || hasFilters;
   }, [h.search, h.salaryOnly, h.newOnly, h.jobType, h.jobTypeOptions]);
 
-  const showActions = isEmpty && hasActiveSearchOrFilters;
+  const showRetry = h.listState.isError || (isEmpty && hasActiveSearchOrFilters);
+  const showClear = isEmpty && hasActiveSearchOrFilters;
 
   const onRetry = () => {
     h.refresh();
@@ -118,6 +119,7 @@ export function HomeScreen(): JSX.Element {
       {!h.initialLoading && showInlineState ? (
         <View style={{ paddingHorizontal: 16, paddingTop: 18 }}>
           <View
+            testID="home.inlineState"
             style={{
               borderWidth: 1,
               borderColor: theme.border,
@@ -161,9 +163,10 @@ export function HomeScreen(): JSX.Element {
                   })}
             </Text>
 
-            {showActions ? (
+            {showRetry ? (
               <View style={{ flexDirection: "row", gap: 10, marginTop: 14, width: "100%" }}>
                 <Pressable
+                  testID="home.retry"
                   onPress={onRetry}
                   style={({ pressed }) => ({
                     flex: 1,
@@ -179,22 +182,25 @@ export function HomeScreen(): JSX.Element {
                   </Text>
                 </Pressable>
 
-                <Pressable
-                  onPress={onClearAndReload}
-                  style={({ pressed }) => ({
-                    flex: 1,
-                    borderRadius: 14,
-                    paddingVertical: 12,
-                    alignItems: "center",
-                    borderWidth: 1,
-                    borderColor: theme.border,
-                    backgroundColor: pressed ? theme.background : "transparent",
-                  })}
-                >
-                  <Text style={{ color: theme.textPrimary, fontWeight: "900" }}>
-                    {h.t("home.state.clear", { defaultValue: "Clear" })}
-                  </Text>
-                </Pressable>
+                {showClear ? (
+                  <Pressable
+                    testID="home.clear"
+                    onPress={onClearAndReload}
+                    style={({ pressed }) => ({
+                      flex: 1,
+                      borderRadius: 14,
+                      paddingVertical: 12,
+                      alignItems: "center",
+                      borderWidth: 1,
+                      borderColor: theme.border,
+                      backgroundColor: pressed ? theme.background : "transparent",
+                    })}
+                  >
+                    <Text style={{ color: theme.textPrimary, fontWeight: "900" }}>
+                      {h.t("home.state.clear", { defaultValue: "Clear" })}
+                    </Text>
+                  </Pressable>
+                ) : null}
               </View>
             ) : null}
           </View>
@@ -203,6 +209,7 @@ export function HomeScreen(): JSX.Element {
 
       {!h.initialLoading ? (
         <FlatList
+          testID="home.list"
           data={h.items}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}

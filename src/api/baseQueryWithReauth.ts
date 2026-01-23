@@ -11,7 +11,6 @@ import { env } from "../config/env";
 import { authActions } from "../features/auth/authSlice";
 import type { RootState } from "../store/store";
 import { clearSession, persistSession } from "../storage/sessionStorage";
-import { mapLocaleToBackend } from "./locale";
 import { api as apiSlice } from "./api";
 import type { RefreshDataDto } from "../features/auth/authTypes";
 import { resetToLogin } from "../navigation/navigationRef";
@@ -27,7 +26,7 @@ const rawBaseQuery = fetchBaseQuery({
     const language = state.auth.language;
     const fingerprintHash = state.auth.fingerprintHash;
 
-    headers.set("Accept-Language", mapLocaleToBackend(language));
+    headers.set("Accept-Language", language);
 
     if (fingerprintHash) headers.set("X-Client-Fingerprint", fingerprintHash);
     if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);

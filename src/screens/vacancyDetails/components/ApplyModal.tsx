@@ -30,36 +30,7 @@ function formatFileSize(bytes?: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export function ApplyModal({
-  theme,
-  t,
-  visible,
-  onClose,
-  vacancyTitle,
-
-  coverLetter,
-  onChangeCoverLetter,
-
-  pickedFile,
-  onPickResume,
-  onRemoveResume,
-
-  error,
-
-  onSubmit,
-  submitting,
-
-  submitLabel,
-  cancelLabel,
-
-  coverLabel,
-  coverPlaceholder,
-  coverHint,
-
-  resumeLabel,
-  uploadLabel,
-  uploadHint,
-}: {
+type Props = {
   theme: Theme;
   t: TFunction;
   visible: boolean;
@@ -88,7 +59,33 @@ export function ApplyModal({
   resumeLabel: string;
   uploadLabel: string;
   uploadHint: string;
-}): JSX.Element {
+};
+
+export function ApplyModal(props: Props): JSX.Element {
+  const {
+    theme,
+    t,
+    visible,
+    onClose,
+    vacancyTitle,
+    coverLetter,
+    onChangeCoverLetter,
+    pickedFile,
+    onPickResume,
+    onRemoveResume,
+    error,
+    onSubmit,
+    submitting,
+    submitLabel,
+    cancelLabel,
+    coverLabel,
+    coverPlaceholder,
+    coverHint,
+    resumeLabel,
+    uploadLabel,
+    uploadHint,
+  } = props;
+
   useEffect(() => {
     if (visible) Keyboard.dismiss();
   }, [visible]);
@@ -99,9 +96,8 @@ export function ApplyModal({
   };
 
   const handleOverlayPress = () => {
-    const isKeyboardLikelyOpen = Keyboard.isVisible?.() as unknown as boolean; // may be undefined depending on RN version
     Keyboard.dismiss();
-    if (!isKeyboardLikelyOpen) onClose();
+    onClose();
   };
 
   const handleSubmit = async () => {
@@ -111,12 +107,13 @@ export function ApplyModal({
 
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={handleClose}>
-      <Pressable style={styles.overlay} onPress={handleOverlayPress}>
+      <Pressable testID="applyModal.root" style={styles.overlay} onPress={handleOverlayPress}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ width: "100%" }}
         >
           <Pressable
+            testID="applyModal.card"
             onPress={(e) => e.stopPropagation()}
             style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}
           >
@@ -126,6 +123,7 @@ export function ApplyModal({
               </Text>
 
               <Pressable
+                testID="applyModal.close"
                 onPress={handleClose}
                 disabled={submitting}
                 style={({ pressed }) => [
@@ -148,6 +146,7 @@ export function ApplyModal({
               <Text style={[styles.fieldLabel, { color: theme.textPrimary }]}>{coverLabel}</Text>
 
               <TextInput
+                testID="applyModal.cover"
                 value={coverLetter}
                 onChangeText={onChangeCoverLetter}
                 placeholder={coverPlaceholder}
@@ -178,6 +177,7 @@ export function ApplyModal({
 
               {!pickedFile ? (
                 <Pressable
+                  testID="applyModal.pick"
                   onPress={() => void onPickResume()}
                   style={({ pressed }) => [
                     styles.uploadBox,
@@ -218,6 +218,7 @@ export function ApplyModal({
                   </View>
 
                   <Pressable
+                    testID="applyModal.removeFile"
                     onPress={() => {
                       Keyboard.dismiss();
                       onRemoveResume();
@@ -234,6 +235,7 @@ export function ApplyModal({
 
               {error ? (
                 <View
+                  testID="applyModal.errorBox"
                   style={[
                     styles.errorBox,
                     { borderColor: theme.border, backgroundColor: theme.background },
@@ -246,6 +248,7 @@ export function ApplyModal({
               <View style={{ height: 18 }} />
 
               <Pressable
+                testID="applyModal.submit"
                 onPress={() => void handleSubmit()}
                 disabled={submitting}
                 style={({ pressed }) => [
@@ -261,6 +264,7 @@ export function ApplyModal({
               </Pressable>
 
               <Pressable
+                testID="applyModal.cancel"
                 onPress={handleClose}
                 disabled={submitting}
                 style={({ pressed }) => [

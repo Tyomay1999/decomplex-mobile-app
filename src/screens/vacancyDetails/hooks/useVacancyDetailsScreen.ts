@@ -336,7 +336,7 @@ export function useVacancyDetailsScreen(): UseVacancyDetailsScreen {
 
       const backendMsg = getBackendErrorMessage(e);
       setFormError(backendMsg ?? t("vacancy.submitFailed"));
-      closeApply();
+      Keyboard.dismiss();
     }
   }, [
     applyDisabled,

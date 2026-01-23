@@ -34,6 +34,7 @@ export function TopBar({
       </Text>
 
       <Pressable
+        testID="login.openLanguage"
         onPress={onOpenLanguage}
         style={[styles.langBtn, { borderColor: border, backgroundColor: surface }]}
       >

@@ -8,15 +8,18 @@ export function StickyApplyBar({
   label,
   disabled,
   onPress,
+  testID,
 }: {
   theme: Theme;
   label: string;
   disabled: boolean;
   onPress: () => void;
+  testID?: string;
 }): JSX.Element {
   return (
     <View style={[styles.sticky, { borderTopColor: theme.border, backgroundColor: theme.surface }]}>
       <Pressable
+        testID={testID}
         onPress={onPress}
         disabled={disabled}
         style={({ pressed }) => [

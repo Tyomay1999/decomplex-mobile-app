@@ -13,7 +13,6 @@ import { useRegisterCandidateMutation } from "../../../features/auth/authApi";
 import { persistSession } from "../../../storage/sessionStorage";
 import { ThemeContext } from "../../../app/ThemeProvider";
 import type { Theme } from "../../../app/theme";
-import { mapLocaleToBackend } from "../../../api/locale";
 import { getFetchErrorData, isFetchBaseQueryError } from "../../../types/api";
 import type { ApiErrorShape } from "../../../types/api";
 import type { Locale } from "../../../storage/sessionStorage";
@@ -171,7 +170,7 @@ export function useRegisterScreen(): UseRegisterScreen {
         password,
         firstName: firstName.trim(),
         lastName: lastName.trim(),
-        language: mapLocaleToBackend(language),
+        language,
       }).unwrap();
 
       applyRedirect();

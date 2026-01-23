@@ -39,6 +39,7 @@ export function VacancyCard(props: Props): JSX.Element {
 
   return (
     <Pressable
+      testID={`home.vacancy.${item.id}`}
       onPress={() => onOpen(item.id)}
       style={({ pressed }) => [
         styles.card,
@@ -113,6 +114,7 @@ export function VacancyCard(props: Props): JSX.Element {
       <View style={styles.actionsRow}>
         {isAuthed ? (
           <Pressable
+            testID={`home.vacancy.${item.id}.details`}
             onPress={() => onOpen(item.id)}
             style={({ pressed }) => [
               styles.actionBtn,
