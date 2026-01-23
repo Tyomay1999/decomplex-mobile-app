@@ -43,6 +43,7 @@ export function LoginForm({
   return (
     <View style={styles.form}>
       <TextInput
+        testID="login.email"
         value={email}
         onChangeText={onChangeEmail}
         placeholder={t("auth.login.email", "Email address")}
@@ -58,6 +59,7 @@ export function LoginForm({
       />
 
       <TextInput
+        testID="login.password"
         value={password}
         onChangeText={onChangePassword}
         placeholder={t("auth.login.password", "Password")}
@@ -73,6 +75,7 @@ export function LoginForm({
       />
 
       <Pressable
+        testID="login.remember"
         onPress={onToggleRememberUser}
         style={({ pressed }) => ({
           flexDirection: "row",
@@ -106,6 +109,7 @@ export function LoginForm({
       </Pressable>
 
       <Pressable
+        testID="login.submit"
         onPress={() => void onSubmit()}
         disabled={!canSubmit || loading}
         style={({ pressed }) => [

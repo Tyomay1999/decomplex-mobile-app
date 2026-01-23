@@ -1,5 +1,6 @@
 import React, { JSX } from "react";
-import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, View } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { LanguageMenu } from "../../components/LanguageMenu";
 import { useRegisterScreen } from "./hooks/useRegisterScreen";
@@ -23,6 +24,7 @@ export function RegisterScreen(): JSX.Element {
             languageLabel={String(h.language).toUpperCase()}
             onBack={h.onBack}
             onOpenLanguage={() => h.setLangOpen(true)}
+            languageTestId="register.openLanguage"
           />
         </View>
 

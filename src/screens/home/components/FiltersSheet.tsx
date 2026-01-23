@@ -45,6 +45,8 @@ type Props<T> = {
   applyDisabled?: boolean;
 };
 
+type PressEventLike = { stopPropagation?: () => void };
+
 export function FiltersSheet<T>(props: Props<T>): JSX.Element {
   const {
     visible,
@@ -71,11 +73,18 @@ export function FiltersSheet<T>(props: Props<T>): JSX.Element {
 
   const iosBottomPad = Platform.OS === "ios" ? 22 : 12;
 
+  const handleContainerPress = (e?: PressEventLike): void => {
+    e?.stopPropagation?.();
+  };
+
+  const isApplyDisabled = Boolean(applyDisabled);
+
   return (
     <Modal visible={visible} transparent animationType="none" onRequestClose={onClose}>
-      <Pressable style={styles.overlay} onPress={onClose}>
-        <Pressable onPress={(e) => e.stopPropagation()}>
+      <Pressable testID="home.filters.overlay" style={styles.overlay} onPress={onClose}>
+        <Pressable testID="home.filters.container" onPress={handleContainerPress}>
           <Animated.View
+            testID="home.filters.sheet"
             style={[
               styles.sheet,
               {
@@ -100,28 +109,39 @@ export function FiltersSheet<T>(props: Props<T>): JSX.Element {
             </View>
 
             <View style={styles.header}>
-              <Text style={[styles.title, { color: theme.textPrimary }]}>{title}</Text>
-              <Pressable onPress={onClose} style={styles.closeBtn}>
+              <Text
+                testID="home.filters.title"
+                style={[styles.title, { color: theme.textPrimary }]}
+              >
+                {title}
+              </Text>
+
+              <Pressable testID="home.filters.close" onPress={onClose} style={styles.closeBtn}>
                 <Text style={{ color: theme.textSecondary, fontSize: 18 }}>✕</Text>
               </Pressable>
             </View>
 
             <ScrollView
+              testID="home.filters.scroll"
               style={{ flex: 1 }}
               contentContainerStyle={styles.scrollContent}
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
             >
-              <Text style={[styles.sectionLabel, { color: theme.textTertiary }]}>
+              <Text
+                testID="home.filters.jobType.label"
+                style={[styles.sectionLabel, { color: theme.textTertiary }]}
+              >
                 {jobTypeLabel}
               </Text>
 
-              <View style={styles.chipsRow}>
+              <View testID="home.filters.jobType.options" style={styles.chipsRow}>
                 {options.map((x) => {
                   const active = value === x.value;
 
                   return (
                     <Pressable
+                      testID={`home.filters.jobType.${x.key}`}
                       key={x.key}
                       onPress={() => onChange(x.value)}
                       style={({ pressed }) => [
@@ -149,6 +169,7 @@ export function FiltersSheet<T>(props: Props<T>): JSX.Element {
               <View style={{ height: 12 }} />
 
               <Pressable
+                testID="home.filters.salaryOnly"
                 onPress={onToggleSalaryOnly}
                 style={({ pressed }) => [
                   styles.toggleRow,
@@ -163,7 +184,10 @@ export function FiltersSheet<T>(props: Props<T>): JSX.Element {
                   {t("home.filters.salaryOnly", { defaultValue: "Salary only" })}
                 </Text>
 
-                <Text style={{ color: theme.textSecondary, fontWeight: "700" }}>
+                <Text
+                  testID="home.filters.salaryOnly.value"
+                  style={{ color: theme.textSecondary, fontWeight: "700" }}
+                >
                   {salaryOnly
                     ? t("common.on", { defaultValue: "ON" })
                     : t("common.off", { defaultValue: "OFF" })}
@@ -171,6 +195,7 @@ export function FiltersSheet<T>(props: Props<T>): JSX.Element {
               </Pressable>
 
               <Pressable
+                testID="home.filters.newOnly"
                 onPress={onToggleNewOnly}
                 style={({ pressed }) => [
                   styles.toggleRow,
@@ -185,7 +210,10 @@ export function FiltersSheet<T>(props: Props<T>): JSX.Element {
                   {t("home.filters.newOnly", { defaultValue: "New only" })}
                 </Text>
 
-                <Text style={{ color: theme.textSecondary, fontWeight: "700" }}>
+                <Text
+                  testID="home.filters.newOnly.value"
+                  style={{ color: theme.textSecondary, fontWeight: "700" }}
+                >
                   {newOnly
                     ? t("common.on", { defaultValue: "ON" })
                     : t("common.off", { defaultValue: "OFF" })}
@@ -193,8 +221,9 @@ export function FiltersSheet<T>(props: Props<T>): JSX.Element {
               </Pressable>
             </ScrollView>
 
-            <View style={styles.actions}>
+            <View testID="home.filters.actions" style={styles.actions}>
               <Pressable
+                testID="home.filters.reset"
                 onPress={onReset}
                 style={({ pressed }) => [
                   styles.btn,
@@ -209,13 +238,15 @@ export function FiltersSheet<T>(props: Props<T>): JSX.Element {
               </Pressable>
 
               <Pressable
+                testID="home.filters.apply"
                 onPress={onApply}
-                disabled={Boolean(applyDisabled)}
+                disabled={isApplyDisabled}
+                accessibilityState={{ disabled: isApplyDisabled }}
                 style={({ pressed }) => [
                   styles.btnPrimary,
                   {
                     backgroundColor: theme.primary,
-                    opacity: applyDisabled ? 0.55 : pressed ? 0.92 : 1,
+                    opacity: isApplyDisabled ? 0.55 : pressed ? 0.92 : 1,
                   },
                 ]}
               >

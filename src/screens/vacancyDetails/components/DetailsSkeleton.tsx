@@ -104,12 +104,18 @@ function SkeletonCard({ theme, children }: { theme: Theme; children: ReactNode }
   );
 }
 
-export function VacancyDetailsSkeleton({ theme }: { theme: Theme }): JSX.Element {
+export function VacancyDetailsSkeleton({
+  testID,
+  theme,
+}: {
+  testID?: string;
+  theme: Theme;
+}): JSX.Element {
   const pulseFast = usePulse(800);
   const pulseSlow = usePulse(1200);
 
   return (
-    <View style={styles.container}>
+    <View testID={testID} style={styles.container}>
       <SkeletonCard theme={theme}>
         <SkeletonLine theme={theme} height={22} widthPercent="75%" pulse={pulseSlow} phase={0.0} />
         <View style={{ height: 10 }} />

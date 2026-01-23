@@ -27,17 +27,19 @@ export function VacancyDetailsScreen(): JSX.Element {
       <TopBar theme={theme} title={h.t("vacancy.actionsDetails")} onBack={h.goBack} />
 
       {h.query.isLoading ? (
-        <VacancyDetailsSkeleton theme={theme} />
+        <VacancyDetailsSkeleton theme={theme} testID="vacancyDetails.loading" />
       ) : h.query.isError ? (
         <ScreenError
           theme={theme}
           label={h.t("common.error")}
           retryLabel={h.t("common.retry")}
           onRetry={h.refetch}
+          testID="vacancyDetails.inlineState"
+          retryTestID="screenState.retry"
         />
       ) : (
         <>
-          <ScrollView contentContainerStyle={styles.scrollContent}>
+          <ScrollView testID="vacancyDetails.content" contentContainerStyle={styles.scrollContent}>
             <HeaderCard theme={theme} t={h.t} vacancy={h.vacancy} tags={h.tags} />
 
             <Section
@@ -74,6 +76,7 @@ export function VacancyDetailsScreen(): JSX.Element {
             }
             disabled={h.applyDisabled}
             onPress={h.openApply}
+            testID="vacancyDetails.apply"
           />
         </>
       )}

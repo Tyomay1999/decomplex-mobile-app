@@ -47,6 +47,7 @@ export function RegisterForm({
   return (
     <View style={styles.form}>
       <TextInput
+        testID="register.firstName"
         value={firstName}
         onChangeText={onChangeFirstName}
         placeholder={t("auth.register.firstName", "First name")}
@@ -60,6 +61,7 @@ export function RegisterForm({
       />
 
       <TextInput
+        testID="register.lastName"
         value={lastName}
         onChangeText={onChangeLastName}
         placeholder={t("auth.register.lastName", "Last name")}
@@ -73,6 +75,7 @@ export function RegisterForm({
       />
 
       <TextInput
+        testID="register.email"
         value={email}
         onChangeText={onChangeEmail}
         placeholder={t("auth.register.email", "Email address")}
@@ -88,6 +91,7 @@ export function RegisterForm({
       />
 
       <TextInput
+        testID="register.password"
         value={password}
         onChangeText={onChangePassword}
         placeholder={t("auth.register.password", "Password")}
@@ -103,6 +107,7 @@ export function RegisterForm({
       />
 
       <Pressable
+        testID="register.submit"
         onPress={() => void onSubmit()}
         disabled={!canSubmit || loading}
         style={({ pressed }) => [
@@ -121,7 +126,8 @@ export function RegisterForm({
         <Text style={[styles.footerText, { color: textSecondary }]}>
           {t("auth.register.haveAccount", "Already have an account?")}
         </Text>
-        <Pressable onPress={onGoLogin}>
+
+        <Pressable testID="register.goLogin" onPress={onGoLogin}>
           <Text style={[styles.link, { color: primary }]}>
             {" "}
             {t("auth.register.login", "Log in")}

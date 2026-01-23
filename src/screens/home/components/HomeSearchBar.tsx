@@ -22,13 +22,14 @@ export function HomeSearchBar(props: Props): JSX.Element {
   const { value, onChange, placeholder, onOpenFilters, theme } = props;
 
   return (
-    <View style={styles.searchWrap}>
+    <View testID="home.search" style={styles.searchWrap}>
       <View
         style={[styles.searchBar, { backgroundColor: theme.surface, borderColor: theme.border }]}
       >
         <Text style={{ fontSize: 18, color: theme.textSecondary }}>🔍</Text>
 
         <TextInput
+          testID="home.search.input"
           value={value}
           onChangeText={onChange}
           placeholder={placeholder}
@@ -44,6 +45,7 @@ export function HomeSearchBar(props: Props): JSX.Element {
       </View>
 
       <Pressable
+        testID="home.filters.open"
         onPress={() => {
           Keyboard.dismiss();
           onOpenFilters();

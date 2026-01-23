@@ -9,12 +9,14 @@ export function TopBar({
   languageLabel,
   onBack,
   onOpenLanguage,
+  languageTestId,
 }: {
   theme?: Theme;
   title: string;
   languageLabel: string;
   onBack: () => void;
   onOpenLanguage: () => void;
+  languageTestId?: string;
 }): JSX.Element {
   const border = theme?.border ?? "rgba(0,0,0,0.12)";
   const surface = theme?.surface ?? "#FFFFFF";
@@ -34,6 +36,7 @@ export function TopBar({
       </Text>
 
       <Pressable
+        testID={languageTestId}
         onPress={onOpenLanguage}
         style={[styles.langBtn, { borderColor: border, backgroundColor: surface }]}
       >
