@@ -30,8 +30,8 @@ describe("notificationsSlice", () => {
   test("remove deletes by id", () => {
     const s0: State = {
       queue: [
-        { id: "a", kind: "info", message: "m1", durationMs: 10, createdAt: 1 },
-        { id: "b", kind: "info", message: "m2", durationMs: 10, createdAt: 2 },
+        { id: "a", kind: "info", message: "m1", durationMs: 10, createdAt: 1, expiresAt: 11 },
+        { id: "b", kind: "info", message: "m2", durationMs: 10, createdAt: 2, expiresAt: 12 },
       ],
     };
 
@@ -41,7 +41,7 @@ describe("notificationsSlice", () => {
 
   test("clear empties queue", () => {
     const s0: State = {
-      queue: [{ id: "a", kind: "info", message: "m", durationMs: 10, createdAt: 1 }],
+      queue: [{ id: "a", kind: "info", message: "m", durationMs: 10, createdAt: 1, expiresAt: 11 }],
     };
 
     const s1 = notificationsReducer(s0, notificationsActions.clear());

@@ -34,12 +34,16 @@ export function NotificationHost(): JSX.Element | null {
     ]).start();
 
     const id = top.id;
+
+    const now = Date.now();
+    const remainingMs = Math.max(0, top.expiresAt - now);
+
     const timer = setTimeout(() => {
       dispatch(notificationsActions.remove(id));
-    }, top.durationMs);
+    }, remainingMs);
 
     return () => clearTimeout(timer);
-  }, [dispatch, opacity, translateY, top?.id, top?.durationMs]);
+  }, [dispatch, opacity, translateY, top?.id, top?.expiresAt]);
 
   if (!theme || !top) return null;
 

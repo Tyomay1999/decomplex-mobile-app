@@ -7,4 +7,5 @@ export type NotificationItem = {
   title?: string;
   durationMs: number;
   createdAt: number;
+  expiresAt: number;
 };

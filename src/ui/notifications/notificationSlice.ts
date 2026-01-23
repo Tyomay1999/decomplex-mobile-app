@@ -22,17 +22,35 @@ function makeId(): string {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function normalizeText(value: string | undefined): string {
+  return (value ?? "").trim();
+}
+
+function signatureOf(input: { kind: NotificationKind; title?: string; message: string }): string {
+  return `${input.kind}__${normalizeText(input.title)}__${normalizeText(input.message)}`;
+}
+
+function pickDurationMs(payload: PushPayload): number {
+  if (typeof payload.durationMs === "number" && payload.durationMs > 0) return payload.durationMs;
+  return payload.kind === "error" ? 4500 : 2500;
+}
+
 export const notificationsSlice = createSlice({
   name: "notifications",
   initialState,
   reducers: {
     push(state, action: PayloadAction<PushPayload>) {
-      const durationMs =
-        typeof action.payload.durationMs === "number" && action.payload.durationMs > 0
-          ? action.payload.durationMs
-          : action.payload.kind === "error"
-            ? 4500
-            : 2500;
+      const now = Date.now();
+      const durationMs = pickDurationMs(action.payload);
+
+      const sig = signatureOf(action.payload);
+      const existing = state.queue.find((n) => signatureOf(n) === sig);
+
+      if (existing) {
+        existing.durationMs = Math.max(existing.durationMs, durationMs);
+        existing.expiresAt = now + durationMs;
+        return;
+      }
 
       state.queue.push({
         id: makeId(),
@@ -40,7 +58,8 @@ export const notificationsSlice = createSlice({
         message: action.payload.message,
         title: action.payload.title,
         durationMs,
-        createdAt: Date.now(),
+        createdAt: now,
+        expiresAt: now + durationMs,
       });
 
       if (state.queue.length > MAX_QUEUE) {
