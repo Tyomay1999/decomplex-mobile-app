@@ -38,10 +38,24 @@ jobs:
           file: ./Dockerfile
           push: true
           build-args: |
-            EXPO_PUBLIC_API_BASE_URL=${{ vars.EXPO_PUBLIC_API_BASE_URL }}
+            EXPO_PUBLIC_API_BASE_URL=${{ vars.EXPO_PUBLIC_API_BASE_URL_PROD }}
             BASE_PATH=/
           tags: |
             ghcr.io/tyomay1999/decomplex-mobile-app:latest
             ghcr.io/tyomay1999/decomplex-mobile-app:sha-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build & push (demo)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          build-args: |
+            EXPO_PUBLIC_API_BASE_URL=${{ vars.EXPO_PUBLIC_API_BASE_URL_DEMO }}
+            BASE_PATH=/
+          tags: |
+            ghcr.io/tyomay1999/decomplex-mobile-app:demo
           cache-from: type=gha
           cache-to: type=gha,mode=max
