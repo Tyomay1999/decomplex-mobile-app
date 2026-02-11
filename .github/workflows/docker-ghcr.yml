@@ -41,7 +41,7 @@ jobs:
             EXPO_PUBLIC_API_BASE_URL=${{ vars.EXPO_PUBLIC_API_BASE_URL }}
             BASE_PATH=/
           tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:sha-${{ github.sha }}
+            ghcr.io/tyomay1999/decomplex-mobile-app:latest
+            ghcr.io/tyomay1999/decomplex-mobile-app:sha-${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
